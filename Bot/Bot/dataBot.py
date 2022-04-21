@@ -40,9 +40,19 @@ def data_treat_bot(item_price_trend):
     if not item_price_trend:
         return False
 
-    #
+    # 返回数据
     date_ = []
     price_ = []
     tip_ = []
 
+    # 将初始数据进行处理
+    item_price_trend = eval(item_price_trend.replace('Date.UTC',''))
 
+    # 对初步处理后的数据进行切分
+    for data in item_price_trend:
+        date_.append(date_treat_bot(data[0]))
+        price_.append(data[1])
+        tip_.append(data[2])
+
+    # 返回结果
+    return date_,price_,tip_
