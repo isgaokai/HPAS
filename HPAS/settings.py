@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     # 对添加对app进行挂载
     'user.apps.UserConfig',
     'ajax.apps.AjaxConfig',
-    'log.apps.LogConfig',
     'home.apps.HomeConfig',
     # demo
     'demo.apps.DemoConfig',
