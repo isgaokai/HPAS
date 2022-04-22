@@ -58,10 +58,10 @@ def history_price_bot(url):
 
     # 判断是否存在
     correct = item_js['ok']
-    print(correct,type(correct)) #0 <class 'int'>
+    #0 <class 'int'>
     # 输入存在问题:
     if not correct:
-        return 'false'
+        return None,None,None,None
 
     # 物品标题
     item_title = item_js['single']['title']
@@ -72,4 +72,5 @@ def history_price_bot(url):
     # 商品价格趋势
     item_price_trend = item_js['single']['jiagequshiyh']
 
-history_price_bot('https://www.baidu.com/')
+    return  item_title,item_lower_price,item_lower_price_yh,item_price_trend
+
