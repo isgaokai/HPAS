@@ -8,14 +8,14 @@
     <meta http-equiv="pragma" content="no-cache">
     <meta http-equiv="cache-control" content="no-cache">
     <meta http-equiv="expires" content="0">
-    <title>注册界面</title>
-    <link href="{% static 'login&register_static/css/default.css' %}" rel="stylesheet" type="text/css">
+    <title>用户注册</title>
+    <link href="{% static 'normalUser_login&register_static/css/default.css' %}" rel="stylesheet" type="text/css">
     <!--必要样式-->
-    <link href="{% static 'login&register_static/css/styles_res.css' %}" rel="stylesheet" type="text/css"/>
-    <link href="{% static 'login&register_static/css/demo.css' %}" rel="stylesheet" type="text/css"/>
-    <link href="{% static 'login&register_static/css/loaders.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'normalUser_login&register_static/css/styles_res.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'normalUser_login&register_static/css/demo.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'normalUser_login&register_static/css/loaders.css' %}" rel="stylesheet" type="text/css"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
-    <link href="{% static 'login&register_static/layui/css/layui.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'normalUser_login&register_static/layui/css/layui.css' %}" rel="stylesheet" type="text/css"/>
 
 </head>
 
@@ -34,25 +34,25 @@
             {# 用户名#}
             <div class='login_fields__user'>
                 <div class='icon'>
-                    <img alt="" src='/static/login&register_static/img/user_icon_copy.png' id="username_img">
+                    <img alt="" src='/static/normalUser_login&register_static/img/user_icon_copy.png' id="username_img">
                 </div>
                 <input id="txt_username" name="txt_username" placeholder='请输入您的邮箱或手机号码' maxlength="30" type='text' autocomplete="off"
                        onblur="ajax_username()"/>
                 <span id="username_ok" class="icon_yes" style="display: none;"></span>
                 <div class='validation'>
-                    <img alt="" src='/static/login&register_static/img/tick.png'>
+                    <img alt="" src='/static/normalUser_login&register_static/img/tick.png'>
                 </div>
             </div>
 
             {# 激活码 #}
             <div class='login_fields__password'>
                 <div class='icon' style="width: 30px; height: 40px" style="opacity:0.4">
-                    <img alt="" src='/static/login&register_static/img/activationcdoe.png'>
+                    <img alt="" src='/static/normalUser_login&register_static/img/activationcdoe.png'>
                 </div>
                 <input id="txt_code" name="txt_code" placeholder='激活码' maxlength="16" type='text' onblur="ajax_code()" autocomplete="off">
                 <span id="code_ok" class="icon_yes" style="display: none;"></span>
                 <div class='validation'>
-                    <img alt="" src='/static/login&register_static/img/tick.png'>
+                    <img alt="" src='/static/normalUser_login&register_static/img/tick.png'>
                 </div>
             </div>
 
@@ -60,30 +60,30 @@
             <div class='login_fields__password'>
                 <div class='login_fields__password'>
                     <div class='icon'>
-                        <img alt="" src='/static/login&register_static/img/lock_icon_copy.png' id="password_img">
+                        <img alt="" src='/static/normalUser_login&register_static/img/lock_icon_copy.png' id="password_img">
                     </div>
                     <input name="txt_password" id="txt_password" placeholder='密码' maxlength="16" type='password' onblur="ajax_password()" autocomplete="off"
                            >
                     <span id="password_ok" class="icon_yes" style="display: none;"></span>
                     <div class='validation'>
-                        <img alt="" src='/static/login&register_static/img/tick.png'>
+                        <img alt="" src='/static/normalUser_login&register_static/img/tick.png'>
                     </div>
                 </div>
                 {# 再次确认密码 #}
                 <div class='login_fields__password'>
                     <div class='icon'>
-                        <img alt="" src='/static/login&register_static/img/lock_icon_copy.png'>
+                        <img alt="" src='/static/normalUser_login&register_static/img/lock_icon_copy.png'>
                     </div>
                     <input id="txt_re_password" name="txt_re_password"placeholder='再次确认密码' maxlength="16" type='password' onblur="ajax_re_password()" autocomplete="off">
                     <span id="re_password_ok" class="icon_yes" style="display: none;"></span>
                     <div class='validation'>
-                        <img alt="" src='/static/login&register_static/img/tick.png'>
+                        <img alt="" src='/static/normalUser_login&register_static/img/tick.png'>
                     </div>
                 </div>
                 {# 验证码 #}
                 <div class='login_fields__password'>
                     <div class='icon'>
-                        <img alt="" src='/static/login&register_static/img/key.png'>
+                        <img alt="" src='/static/normalUser_login&register_static/img/key.png'>
                     </div>
                     <input id="txt_captcha" name="txt_captcha" placeholder='验证码' maxlength="4" type='text' name="ValidateNum"
                            autocomplete="off" onblur="ajax_captcha()">
@@ -121,21 +121,21 @@
     <p>认证中...</p>
 </div>
 <div class="OverWindows"></div>
-<script src="{% static 'login&register_static/js/ajax_check.js' %}"></script>
-<script type="text/javascript" src="{% static 'login&register_static/js/register_check.js' %}"></script>
-<script type="text/javascript" src="{% static 'login&register_static/js/jquery.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'login&register_static/js/jquery-ui.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'login&register_static/js/stopExecutionOnTimeout.js' %}"></script>
-<script type="text/javascript" src="{% static 'login&register_static/layui/layui.js' %}"></script>
-<script type="text/javascript" src="{% static 'login&register_static/js/Particleground.js' %}"></script>
-<script type="text/javascript" src="{% static 'login&register_static/Js/Treatment.js' %}"></script>
-<script type="text/javascript" src="{% static 'login&register_static/js/jquery.mockjax.js' %}"></script>
+<script src="{% static 'normalUser_login&register_static/js/ajax_check.js' %}"></script>
+<script type="text/javascript" src="{% static 'normalUser_login&register_static/js/register_check.js' %}"></script>
+<script type="text/javascript" src="{% static 'normalUser_login&register_static/js/jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'normalUser_login&register_static/js/jquery-ui.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'normalUser_login&register_static/js/stopExecutionOnTimeout.js' %}"></script>
+<script type="text/javascript" src="{% static 'normalUser_login&register_static/layui/layui.js' %}"></script>
+<script type="text/javascript" src="{% static 'normalUser_login&register_static/js/Particleground.js' %}"></script>
+<script type="text/javascript" src="{% static 'normalUser_login&register_static/Js/Treatment.js' %}"></script>
+<script type="text/javascript" src="{% static 'normalUser_login&register_static/js/jquery.mockjax.js' %}"></script>
 <script src="http://i.gtimg.cn/qzone/biz/gdt/lib/jquery/jquery-2.1.4.js?max_age=31536000"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script type="text/javascript">toastr.options.positionClass = 'toast-bottom-right';</script>
-<script type="text/javascript" src="{% static 'login&register_static/img/ThreeWebGL.js' %}"></script>
-<script type="text/javascript" src="{% static 'login&register_static/img/ThreeExtras.js' %}"></script>
-<script type="text/javascript" src="{% static 'login&register_static/img/Detector.js' %}"></script>
+<script type="text/javascript" src="{% static 'normalUser_login&register_static/img/ThreeWebGL.js' %}"></script>
+<script type="text/javascript" src="{% static 'normalUser_login&register_static/img/ThreeExtras.js' %}"></script>
+<script type="text/javascript" src="{% static 'normalUser_login&register_static/img/Detector.js' %}"></script>
 <script id="vs" type="x-shader/x-vertex">
 			varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 ); }
 </script>

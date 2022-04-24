@@ -22,5 +22,9 @@ urlpatterns = [
     # 注册检测
     path('register/register_check/', views.user_register_check_view, name='user_register_check'),
     # 登出
-    path('log_out/', views.log_out_view, name='user_log_out')
+    path('log_out/', views.log_out_view, name='user_log_out'),
+    # 管理员登陆页面
+    path('admin_login/', views.admin_login_view, name='admin_login'),
+    # 管理员登陆检测
+    path('admin_login/login_check/', views.admin_login_check_view, name='admin_login_check'),
 ]

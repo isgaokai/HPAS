@@ -115,7 +115,6 @@ class ChartView(APIView):
         # 未通过验证
         if not uPattern.search(history_key):
             return JsonResponse(json.loads('false'))
-        print(history_key)
         return JsonResponse(json.loads(bar_base(history_key)))
 
 

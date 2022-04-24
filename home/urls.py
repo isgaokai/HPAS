@@ -13,4 +13,5 @@ app_name = 'home'
 urlpatterns = [
     # 主页面
     path('',views.home_main_view,name='home_main_view'),
+
 ]

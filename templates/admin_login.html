@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 {% load static %}
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -10,57 +10,55 @@
     <meta http-equiv="cache-control" content="no-cache">
     <meta http-equiv="expires" content="0">
 
-    <title>登录界面</title>
-    <link href="{% static 'login&register_static/css/default.css' %}" rel="stylesheet" type="text/css">
+    <title>管理员登陆</title>
+    <link href="{% static 'admin_login_static/css/default.css' %}" rel="stylesheet" type="text/css">
     <!--必要样式-->
-    <link href="{% static 'login&register_static/css/styles.css' %}" rel="stylesheet" type="text/css"/>
-    <link href="{% static 'login&register_static/css/demo.css' %}" rel="stylesheet" type="text/css"/>
-    <link href="{% static 'login&register_static/css/loaders.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'admin_login_static/css/styles.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'admin_login_static/css/demo.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'admin_login_static/css/loaders.css' %}" rel="stylesheet" type="text/css"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
-    <link href="{% static 'login&register_static/layui/css/layui.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'admin_login_static/layui/css/layui.css' %}" rel="stylesheet" type="text/css"/>
 
 </head>
 
 <body>
 <div class='login'>
-    <form action="{% url 'user:user_login_check' %}" method="post" id="login_form">
+    <form action="{% url 'user:admin_login_check' %}" method="post" id="login_form">
         {% csrf_token %}
         {#跳转到注册页面#}
-        <a href="{% url 'user:user_register' %}" style="color: #b3d7ff;height: 30px;font-size: 15px;text-align: center;"
-           onmouseover="change_color()"
-           id="to_res" onmouseout="change_color_re()">立即注册</a>
+
         <div class='login_title'>
-            <span>用户登录</span>
+            <span>管理员登录</span>
         </div>
         <div class='login_fields'>
             {# 用户名 #}
             <div class='login_fields__user'>
                 <div class='icon'>
-                    <img alt="" src='/static/login&register_static/img/user_icon_copy.png'>
+                    <img alt="" src='{% static 'admin_login_static/img/user_icon_copy.png' %}'>
                 </div>
                 <input id="txt_username" name="txt_username" placeholder='邮箱/手机号' maxlength="30" type='text' onblur="ajax_login_username()"  autocomplete="off"/>
                 <span id="username_ok" class="icon_yes" style="display: none;"></span>
                 <div class='validation'>
-                    <img alt="" src='/static/login&register_static/img/tick.png'>
+                    <img alt="" src='/static/admin_login_static/img/tick.png'>
                 </div>
             </div>
 
             {# 密码 #}
             <div class='login_fields__password'>
                 <div class='icon'>
-                    <img alt="" src='/static/login&register_static/img/lock_icon_copy.png'>
+                    <img alt="" src='{% static 'admin_login_static/img/lock_icon_copy.png' %}'>
                 </div>
                 <input id="txt_password" name="txt_password" placeholder='密码' maxlength="16" type='password' onblur="ajax_login_password()" autocomplete="off">
                 <span id="password_ok" class="icon_yes" style="display: none;"></span>
                 <div class='validation'>
-                    <img alt="" src='/static/login&register_static/img/tick.png'>
+                    <img alt="" src='{% static 'admin_login_static/img/tick.png' %}'>
                 </div>
             </div>
 
             {# 验证码 #}
             <div class='login_fields__password'>
                 <div class='icon'>
-                    <img alt="" src='/static/login&register_static/img/key.png'>
+                    <img alt="" src='{% static 'admin_login_static/img/key.png' %}'>
                 </div>
                 <input id="txt_captcha" name="txt_captcha" placeholder='验证码' maxlength="4" type='text' name="ValidateNum" autocomplete="off"
                        onblur="ajax_captcha()">
@@ -73,11 +71,6 @@
                 </div>
             </div>
 
-            {# 七天免登陆 #}
-            <div class="login_fields__user" align="center">
-                <input type="checkbox" name="remember"><span
-                    style="color: #D3D7F7;height: 30px;font-size: 15px;text-align: center;">七天免登陆</span>
-            </div>
             <div class='login_fields__submit'>
                 <input type='button' value='登录' id="autologin" name="autologin" onclick="button_submit()">
             </div>
@@ -87,22 +80,22 @@
 </div>
 
 <div class="OverWindows"></div>
-<script src="{% static 'login&register_static/js/ajax_check.js' %}"></script>
-<script type="text/javascript" src="{% static 'login&register_static/js/login_check.js' %}"></script>
-<script type="text/javascript" src="{% static 'login&register_static/js/jquery.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'login&register_static/js/jquery-ui.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'login&register_static/js/stopExecutionOnTimeout.js' %}"></script>
-<script type="text/javascript" src="{% static 'login&register_static/layui/layui.js' %}"></script>
-<script type="text/javascript" src="{% static 'login&register_static/js/Particleground.js' %}"></script>
-<script type="text/javascript" src="{% static 'login&register_static/Js/Treatment.js' %}"></script>
-<script type="text/javascript" src="{% static 'login&register_static/js/jquery.mockjax.js' %}"></script>
+<script src="{% static 'admin_login_static/js/admin_ajax_check.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin_login_static/js/login_check.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin_login_static/js/jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin_login_static/js/jquery-ui.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin_login_static/js/stopExecutionOnTimeout.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin_login_static/layui/layui.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin_login_static/js/Particleground.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin_login_static/Js/Treatment.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin_login_static/js/jquery.mockjax.js' %}"></script>
 <script src="http://i.gtimg.cn/qzone/biz/gdt/lib/jquery/jquery-2.1.4.js?max_age=31536000"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script type="text/javascript">toastr.options.positionClass = 'toast-bottom-right';</script>
-<script type="text/javascript" src="{% static 'login&register_static/img/ThreeWebGL.js' %}"></script>
-<script type="text/javascript" src="{% static 'login&register_static/img/ThreeExtras.js' %}"></script>
-<script type="text/javascript" src="{% static 'login&register_static/img/Detector.js' %}"></script>
-<script type="text/javascript" src="{% static 'login&register_static/img/RequestAnimationFrame.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin_login_static/img/ThreeWebGL.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin_login_static/img/ThreeExtras.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin_login_static/img/Detector.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin_login_static/img/RequestAnimationFrame.js' %}"></script>
 <script id="vs" type="x-shader/x-vertex">
 			varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 ); }
 </script>
