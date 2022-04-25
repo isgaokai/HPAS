@@ -214,14 +214,14 @@ def myAdmin_adduser_check_view(request):
         code = request.POST.get('txt_code')
 
     except:
-        return redirect('/home/')
+        return redirect('/myAdmin/home/')
 
     # 正则及其他检验
     if not ePattern.search(email) or not mPattern.search(phone):
-        return HttpResponse('/myAdmin/home/')
+        return redirect('/myAdmin/home/')
     elif not pPattern.search(password) or password != re_password or Tools.checkout_password(
             password) == 'LowSecurity' or len(code) != 12:
-        return HttpResponse('/myAdmin/home/')
+        return redirect('/myAdmin/home/')
 
     # 进行添加用户
     if NormalUser.objects.filter(nickname=nickname).count() == 0:
@@ -229,7 +229,7 @@ def myAdmin_adduser_check_view(request):
         try:
             with transaction.atomic():
                 # 返回响应
-                result = redirect('/myAdmin/home/')
+                result = redirect('/myAdmin/adduser/')
                 # 获取访问ip地址
                 if request.META.get('HTTP_X_FORWARDED_FOR'):
                     ip = request.META.get("HTTP_X_FORWARDED_FOR")
@@ -245,9 +245,9 @@ def myAdmin_adduser_check_view(request):
                 NormalUser.objects.create(nickname=nickname,email=email,phone=phone, password=password, password_salt=password_salt,
                                           registered_ip_address=ip, used_code=code)
         except:
-            return redirect('/myAdmin/home/')
+            return redirect('/myAdmin/adduser/')
 
         return result
 
     else:
-        return redirect('/myAdmin/home/')
+        return redirect('/myAdmin/adduser/')

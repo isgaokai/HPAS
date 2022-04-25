@@ -5,11 +5,11 @@ from django.db import models
 # 管理员表
 class Administrator(models.Model):
     # 昵称
-    nickname = models.CharField(max_length=16, null=True, blank=True, verbose_name="昵称")
+    nickname = models.CharField(max_length=16, null=True, blank=True,unique = True, verbose_name="昵称")
     # 手机号
-    phone = models.CharField(max_length=11, null=True, blank=True, verbose_name='手机号')
+    phone = models.CharField(max_length=11, null=True, blank=True, unique = True,verbose_name='手机号')
     # 邮箱
-    email = models.CharField(max_length=30, null=True, blank=True, verbose_name='邮箱')
+    email = models.CharField(max_length=30, null=True, blank=True, unique = True,verbose_name='邮箱')
     # 密码
     password = models.CharField(max_length=33, verbose_name='密码')
     # 密码加盐
@@ -35,11 +35,11 @@ class Administrator(models.Model):
 # 普通用户表
 class NormalUser(models.Model):
     # 昵称
-    nickname = models.CharField(max_length=16, null=True, blank=True, verbose_name="昵称")
+    nickname = models.CharField(max_length=16, null=True, blank=True,unique = True, verbose_name="昵称")
     # 手机号
-    phone = models.CharField(max_length=11, null=True, blank=True, verbose_name='手机号')
+    phone = models.CharField(max_length=11, null=True, blank=True,unique = True, verbose_name='手机号')
     # 邮箱
-    email = models.CharField(max_length=30, null=True, blank=True, verbose_name='邮箱')
+    email = models.CharField(max_length=30, null=True, blank=True,unique = True, verbose_name='邮箱')
     # 密码
     password = models.CharField(max_length=33, verbose_name='密码')
     # 密码加盐
@@ -65,7 +65,7 @@ class NormalUser(models.Model):
 # 激活码
 class Code(models.Model):
     # 激活码
-    cdk = models.CharField(max_length=12)
+    cdk = models.CharField(max_length=12,unique = True)
     # 状态
     state = models.BooleanField(default=True)
     # 元数据
