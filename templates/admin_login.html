@@ -23,7 +23,7 @@
 
 <body>
 <div class='login'>
-    <form action="{% url 'user:admin_login_check' %}" method="post" id="login_form">
+    <form action="{% url 'myadmin:admin_login_check' %}" method="post" id="login_form">
         {% csrf_token %}
         {#跳转到注册页面#}
 

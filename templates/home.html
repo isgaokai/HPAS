@@ -26,8 +26,9 @@
     <div class="blog-container">
 
         {% if now_user %}
-            <a href="" class="blog-user">>
-                <b style="color: white">HI,<span>{{ username_head }}****{{ username_tail }}</span> </b>
+            <a href="" class="blog-user">
+                <b style="color: white">HI,<span id="user_logged_in">{{ username_head }}****{{ username_tail }}</span>
+                </b>
                 <object><a href="{% url 'user:user_log_out' %}" style="color: white">[退出]</a></object>
             </a>
         {% else %}
@@ -36,7 +37,7 @@
         {% endif %}
 
         <!-- 页面系统主题 -->
-        <a class="blog-logo" href="home.html">历史价格查询</a>
+        <a class="blog-logo" href="/home/">历史价格查询</a>
         <!-- 当前时间显示-->
         {#<div>#}
         {#    <div id="Main" style=" text-align:center;font-size:20px;color:white;line-height: 64px;"></div>#}
@@ -114,34 +115,44 @@
         // 获取用户输入框里的url
         let history_key = document.getElementById('history_key').value;
 
-        // 正则检验
-        if (uPattern.test(history_key)) {
-            // 发送异步ajax请求
-            $.ajax({
-                // 请求类型
-                type: "GET",
-                // 请求地址
-                url: "demo/bar/",
-                // 携带数据
-                data: 'history_key=' + history_key,
-                // 数据类型
-                dataType: 'json',
-                // 请求成功返回对毁掉函数
-                success: function (result) {
-                    // 判断是否正常接收到数据
-                    if (result.data === false) {
-                        // 提示框
-                        toastr.error('当前输入商品地址错误!')
+        // 判断用户是否登陆
+        let user_logged_in = document.getElementById('user_logged_in');
 
-                    } else {
-                        chart.setOption(result.data);
+
+        if (user_logged_in !== null) {
+            // 正则检验
+            if (uPattern.test(history_key)) {
+                // 发送异步ajax请求
+                $.ajax({
+                    // 请求类型
+                    type: "GET",
+                    // 请求地址
+                    url: "demo/bar/",
+                    // 携带数据
+                    data: 'history_key=' + history_key,
+                    // 数据类型
+                    dataType: 'json',
+                    // 请求成功返回对毁掉函数
+                    success: function (result) {
+                        // 判断是否正常接收到数据
+                        if (result.data === false) {
+                            // 提示框
+                            toastr.error('当前输入商品地址错误!')
+
+                        } else {
+                            chart.setOption(result.data);
+                        }
                     }
-                }
-            });
+                });
+
+            } else {
+                // 提示框
+                toastr.error('当前输入商品地址错误!')
+            }
 
         } else {
             // 提示框
-            toastr.error('当前输入商品地址错误!')
+            toastr.error('请先进行登陆!')
         }
 
     }

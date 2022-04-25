@@ -34,4 +34,6 @@ urlpatterns = [
     path('ajax/', include('ajax.urls')),
     # demo
     url(r'^demo/', include('demo.urls')),
+    # myAdmin_app
+    path('myAdmin/', include('myAdmin.urls')),
 ]
