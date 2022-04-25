@@ -16,5 +16,7 @@ urlpatterns = [
     # ajax检查激活码
     path('check_code/', views.ajax_check_code_view, name='check_code'),
     # ajax检查admin用户名是否存在
-    path('check_admin_username/',views.ajax_check_admin_username_view, name='check_admin_username')
+    path('check_admin_username/',views.ajax_check_admin_username_view, name='check_admin_username'),
+    # ajax检查用户昵称是否存在
+    path('check_nickname/',views.ajax_check_nickname_view, name='check_nickname'),
 ]

@@ -107,7 +107,7 @@ def ajax_check_admin_username_view(request):
 
     # 用户输入用户名
     input_username = request.GET.get('input_username')
-    print(input_username,'1211111')
+
     # 正则检验 手机号和邮箱均未通过
     if not ePattern.search(input_username) and not mPattern.search(input_username):
         # 正则检验未通过
@@ -130,3 +130,15 @@ def ajax_check_admin_username_view(request):
         else:
             # 输入正确
             return HttpResponse('true')
+
+# ajax检查昵称是否存在
+def ajax_check_nickname_view(request):
+    # 用户输入昵称
+    input_nickname= request.GET.get('input_nickname')
+    # 检查是否存在
+    if NormalUser.objects.filter(nickname=input_nickname).count() != 0:
+        # 输入错误
+        return HttpResponse('false')
+    else:
+        # 输入正确
+        return HttpResponse('true')

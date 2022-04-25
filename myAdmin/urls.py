@@ -19,4 +19,8 @@ urlpatterns = [
     path('login/login_check/', views.myAdmin_login_check_view, name='admin_login_check'),
     # 登出
     path('log_out/', views.log_out_view, name='admin_log_out'),
+    # 新增用户页面
+    path('adduser/',views.myAdmin_adduser_view, name='admin_adduser'),
+    # 新增用户验证视图
+    path('adduser/check/',views.myAdmin_adduser_check_view, name='admin_adduser_check'),
 ]

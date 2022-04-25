@@ -82,16 +82,19 @@
                     <div class="am-u-sm-12 am-u-md-6">
                         <div class="am-btn-toolbar">
                             <div class="am-btn-group am-btn-group-xs">
-                                <button type="button" class="am-btn am-btn-default btnAdd" onclick="to_adduser()">
-                                    <span class="icon-plus"></span> 新增员工
-                                </button>
+                                <a href="{% url 'myadmin:admin_adduser' %}">
+                                    <button type="button" class="am-btn am-btn-default btnAdd">
+                                        <span class="icon-plus"></span> 新增用户
+                                    </button>
+                                </a>
+
                             </div>
                         </div>
                     </div>
 
                     <div class="am-u-sm-12 am-u-md-3">
                         <div class="am-input-group am-input-group-sm" style="width: 65% ;right: -105px">
-                            <input class="am-form-field" placeholder="请输入员工姓名" id="username" type="text">
+                            <input class="am-form-field" placeholder="请输入姓名" id="username" type="text">
                             <span class="am-input-group-btn">
 										<button class="am-btn am-btn-default" type="button" id="btnsearch"
                                                 onclick="research_employee()">
@@ -107,34 +110,31 @@
                             <table class="am-table am-table-striped am-table-hover table-main">
                                 <thead>
                                 <tr>
-                                    <th class="table-check">
-                                        <input id="chkAll" type="checkbox">
-                                    </th>
-                                    <th class="table-id">
+                                    <th class="table-id" style="text-align: center">
                                         ID
                                     </th>
-                                    <th class="table-title">
-                                        姓名
+                                    <th class="table-title" style="text-align: center">
+                                        昵称
                                     </th>
-                                    <th>
-                                        年龄
+                                    <th style="text-align: center">
+                                        手机号
                                     </th>
-                                    <th>
-                                        工资
+                                    <th style="text-align: center">
+                                        邮箱
                                     </th>
-                                    <th>
-                                        生日
+                                    <th style="text-align: center">
+                                        注册IP
                                     </th>
-                                    <th>
-                                        电话
+                                    <th style="text-align: center">
+                                        登陆时间
                                     </th>
-                                    <th>
-                                        头像
+                                    <th style="text-align: center">
+                                        使用的激活码
                                     </th>
-                                    <th>
-                                        部门名称
+                                    <th style="text-align: center">
+                                        是否被删除
                                     </th>
-                                    <th class="table-set">
+                                    <th class="table-set" style="text-align: center">
                                         操作
                                     </th>
                                 </tr>
@@ -144,24 +144,16 @@
 
                                 {% for user in page.object_list %}
                                     <tr>
-                                        <td><input name="ids" value="1" type="checkbox"></td>
-                                        <td>{{ user.id }}</td>
-                                        <td><a href="#">{{ user.name }}</a></td>
-                                        <td>{{ user.age }}</td>
-                                        <td>{{ user.salary }}</td>
-                                        <td>{{ user.birth_date | date:'Y-m-d' }}</td>
-                                        <td>{{ user.phone }}</td>
-                                        <td><img src="/static/{{ user.head_portrait }}" alt="" height="50px"
-                                                 width="50px"></td>
-                                        <td><span class="am-badge am-badge-secondary">{% if user.dep_id == 1 %}
-                                            开发部
-                                        {% elif user.dep_id == 2 %}
-                                            运营部
-                                        {% elif user.dep_id == 3 %}
-                                            营销部
-                                        {% elif user.dep_id == 4 %}
-                                            财务部
-                                        {% endif %} </span></td>
+
+                                        <td style="text-align: center">{{ user.id }}</td>
+                                        <td style="text-align: center">{{ user.nickname }}</td>
+                                        <td style="text-align: center">{{ user.phone }}</td>
+                                        <td style="text-align: center">{{ user.email }}</td>
+                                        <td style="text-align: center">{{ user.registered_ip_address }}</td>
+                                        <td style="text-align: center">{{ user.last_login }}</td>
+                                        <td style="text-align: center">{{ user.used_code }}</td>
+                                        <td style="text-align: center">{{ user.is_deleted }}</td>
+
                                         <td>
                                             <div class="am-btn-toolbar">
                                                 <div class="am-btn-group am-btn-group-xs">

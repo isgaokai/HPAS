@@ -94,9 +94,9 @@ def user_login_check_view(request):
 
     # 正则及其他检验
     if not ePattern.search(username) and not mPattern.search(username):
-        return HttpResponse('/user/login/')
+        return redirect('/user/login/')
     elif not pPattern.search(password) or Tools.checkout_password(password) == 'LowSecurity' or captcha != true_captcha:
-        return HttpResponse('/user/login/')
+        return redirect('/user/login/')
 
     # 通过手机号登陆
     if mPattern.search(username):
@@ -137,9 +137,9 @@ def user_login_check_view(request):
                 # 返回
                 return result
             else:
-                return HttpResponse('/user/login/')
+                return redirect('/user/login/')
         else:
-            return HttpResponse('/user/login/')
+            return redirect('/user/login/')
     # 通过email登陆
     else:
         # 查询当前库内是否存在该用户
@@ -179,9 +179,9 @@ def user_login_check_view(request):
                 # 返回
                 return result
             else:
-                return HttpResponse('/user/login/')
+                return redirect('/user/login/')
         else:
-            return HttpResponse('/user/login/')
+            return redirect('/user/login/')
 
 
 # 用户注册视图
@@ -254,7 +254,7 @@ def user_register_check_view(request):
             return result
 
         else:
-            return HttpResponse('/user/register/')
+            return redirect('/user/register/')
     # 通过email注册
     else:
         if NormalUser.objects.filter(email=username).count() == 0:
@@ -282,7 +282,7 @@ def user_register_check_view(request):
 
             return result
         else:
-            return HttpResponse('/user/register/')
+            return redirect('/user/register/')
 
 
 # 获取验证码视图
