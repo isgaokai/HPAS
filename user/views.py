@@ -11,6 +11,7 @@ from django.shortcuts import render, redirect
 from Tools.Tools import Tools
 
 # Create your views here.
+from myLog.models import Log
 from user.captcha.image import ImageCaptcha
 
 from user.models import NormalUser, Code, Administrator
@@ -45,6 +46,9 @@ def user_login_view(request):
             request.session['username'] = cookie_username
             # session添加用户类型
             request.session['user_type'] = 'normalUser'
+            # 添加日志
+            log_content = cookie_username + '访问了网站'
+            Log.objects.create(log_content=log_content)
             # 返回响应
             return redirect('/home/')
         else:
@@ -59,6 +63,9 @@ def user_login_view(request):
             request.session['username'] = cookie_username
             # session添加用户类型
             request.session['user_type'] = 'normalUser'
+            # 添加日志
+            log_content = cookie_username + '访问了网站'
+            Log.objects.create(log_content=log_content)
             # 返回响应
             return redirect('/home/')
         else:
@@ -134,6 +141,9 @@ def user_login_check_view(request):
                 request.session['username'] = username
                 # session添加用户类型
                 request.session['user_type'] = 'normalUser'
+                # 添加日志
+                log_content = username + '访问了网站'
+                Log.objects.create(log_content=log_content)
                 # 返回
                 return result
             else:
@@ -176,6 +186,9 @@ def user_login_check_view(request):
                 request.session['username'] = username
                 # session添加用户类型
                 request.session['user_type'] = 'normalUser'
+                # 添加日志
+                log_content = username + '访问了网站'
+                Log.objects.create(log_content=log_content)
                 # 返回
                 return result
             else:
@@ -248,6 +261,9 @@ def user_register_check_view(request):
                     goal_code.save()
                     # 创建对象
                     NormalUser.objects.create(phone=username, password=password, password_salt=password_salt,registered_ip_address=ip,used_code=code)
+                    # 添加日志
+                    log_content = username + '进行了注册'
+                    Log.objects.create(log_content=log_content)
             except:
                 return redirect('/user/register/')
 
@@ -277,6 +293,9 @@ def user_register_check_view(request):
                     # 创建对象
                     NormalUser.objects.create(email=username, password=password, password_salt=password_salt,
                                               registered_ip_address=ip, used_code=code)
+                    # 添加日志
+                    log_content = username + '进行了注册'
+                    Log.objects.create(log_content=log_content)
             except:
                 return redirect('/user/register/')
 
@@ -304,6 +323,12 @@ def get_captcha_view(request):
 
 # 定义登出页面
 def log_out_view(request):
+    # 获取session中用户名
+    username = request.session.get('username', 'null')
+    # 添加日志
+    if username != 'null':
+        log_content = username + '退出了登陆'
+        Log.objects.create(log_content=log_content)
     # 清除session所有数据
     request.session.flush()
     result = redirect('/home/')

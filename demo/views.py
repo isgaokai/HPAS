@@ -16,6 +16,7 @@ from pyecharts import options as opts
 # Create your views here.
 from Bot.Bot.contentBot import history_price_bot
 from Bot.Bot.dataBot import data_treat_bot
+from myLog.models import Log
 
 
 def response_as_json(data):
@@ -106,7 +107,8 @@ def bar_base(history_url):
 class ChartView(APIView):
     # 数据入口
     def get(self, request, *args, **kwargs):
-
+        # 获取session中用户名
+        username = request.session.get('username', 'null')
         # url正则
         uPattern = re.compile('(http|https):\/\/([\w.]+\/?)\S*')
 
@@ -115,6 +117,11 @@ class ChartView(APIView):
         # 未通过验证
         if not uPattern.search(history_key):
             return JsonResponse(json.loads('false'))
+
+        # 添加日志
+        if username != 'null':
+            log_content = username + '用户查询了' + str(history_key) + '历史价格'
+            Log.objects.create(log_content=log_content)
         return JsonResponse(json.loads(bar_base(history_key)))
 
 

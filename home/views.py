@@ -16,13 +16,6 @@ def home_main_view(request):
         # 检测用户是否登陆
         now_user, username_head, username_tail = Tools.check_user_login(request)
 
-    # # 获取访问ip地址
-    # if request.META.get('HTTP_X_FORWARDED_FOR'):
-    #     ip = request.META.get("HTTP_X_FORWARDED_FOR")
-    # else:
-    #     ip = request.META.get("REMOTE_ADDR")
-    # print(ip)
-
     # 跳转到主html
     return render(request,'home.html',{   'now_user': now_user,  # 当前登陆用户
                                           'username_head': username_head,  # 用户名头部

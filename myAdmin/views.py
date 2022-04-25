@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 
 # Create your views here.
-
+from myLog.models import Log
 from user.models import Administrator, NormalUser, Code
 
 # Create your views here.
@@ -49,7 +49,6 @@ def myAdmin_main_view(request):
 
 # 管理员登陆页面
 def myAdmin_login_view(request):
-    print('11111')
     # 返回对应页面
     return render(request, 'admin_login.html')
 
@@ -114,6 +113,9 @@ def myAdmin_login_check_view(request):
                 request.session['username'] = username
                 # session添加用户类型
                 request.session['user_type'] = 'admin'
+                # 添加日志
+                log_content = username + '管理员登陆了用户管理页面'
+                Log.objects.create(log_content=log_content)
                 # 返回
                 return result
             else:
@@ -151,6 +153,9 @@ def myAdmin_login_check_view(request):
                 request.session['username'] = username
                 # session添加用户类型
                 request.session['user_type'] = 'admin'
+                # 添加日志
+                log_content = username + '管理员登陆了用户管理页面'
+                Log.objects.create(log_content=log_content)
                 # 返回
                 return result
             else:
@@ -161,6 +166,12 @@ def myAdmin_login_check_view(request):
 
 # 定义登出页面
 def log_out_view(request):
+    # 获取session中用户名
+    username = request.session.get('username', 'null')
+    # 添加日志
+    if username != 'null':
+        log_content = username + '管理员退出了登陆'
+        Log.objects.create(log_content=log_content)
     # 清除session所有数据
     request.session.flush()
     result = redirect('/myAdmin/home/')
@@ -181,6 +192,10 @@ def myAdmin_adduser_view(request):
     # else:
     # 检测用户是否登陆
     now_user, username_head, username_tail = Tools.check_user_login(request)
+    if now_user:
+        # 添加日志
+        log_content = now_user + '管理员访问了新增用户页面'
+        Log.objects.create(log_content=log_content)
     # 跳转到主html
     return render(request, 'admin_add_user.html', {'now_user': now_user,  # 当前登陆用户
                                                    'username_head': username_head,  # 用户名头部
@@ -223,6 +238,9 @@ def myAdmin_adduser_check_view(request):
             password) == 'LowSecurity' or len(code) != 12:
         return redirect('/myAdmin/home/')
 
+    # 获取session中用户名
+    username = request.session.get('username', 'null')
+
     # 进行添加用户
     if NormalUser.objects.filter(nickname=nickname).count() == 0:
         # 事务控制
@@ -242,8 +260,14 @@ def myAdmin_adduser_check_view(request):
                 goal_code.state = 0
                 goal_code.save()
                 # 创建对象
-                NormalUser.objects.create(nickname=nickname,email=email,phone=phone, password=password, password_salt=password_salt,
+                NormalUser.objects.create(nickname=nickname, email=email, phone=phone, password=password,
+                                          password_salt=password_salt,
                                           registered_ip_address=ip, used_code=code)
+                # 添加日志
+                if username != 'null':
+                    log_content = str(username) + '管理员添加了用户:' + str(nickname) + '手机号:' + str(phone) + '邮箱号:' + str(
+                        email)
+                    Log.objects.create(log_content=log_content)
         except:
             return redirect('/myAdmin/adduser/')
 

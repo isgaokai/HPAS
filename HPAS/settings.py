@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'home.apps.HomeConfig',
     # demo
     'demo.apps.DemoConfig',
-    'myAdmin.apps.MyadminConfig'
+    'myAdmin.apps.MyadminConfig',
+    'myLog.apps.MylogConfig',
 ]
 
 MIDDLEWARE = [
