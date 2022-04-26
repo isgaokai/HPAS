@@ -27,23 +27,22 @@ def myAdmin_main_view(request):
     # else:
     # 检测用户是否登陆
     now_user, username_head, username_tail = Tools.check_user_login(request)
-    # 获取当前页面的索引
-    page_index = int(request.GET.get('page_index', 1))
+
     # 查询全部职员
-    users = NormalUser.objects.all()
+    users = NormalUser.objects.all().order_by('id')
     # 声明分页器对象
-    paginator = Paginator(object_list=users, per_page=2)
-    # 判断获取的页面索引是否超出范围
-    if page_index not in paginator.page_range:
-        # 如果超出范围则跳转回第一页
-        page_index = 1
+    paginator = Paginator(object_list=users, per_page=16)
     # 当前页面对应的页面对象
-    now_page = paginator.page(page_index)
+    now_page = paginator.page(1)
+    # 全部用户数量
+    all_user_count = NormalUser.objects.filter(is_deleted=False).count()
+    print(all_user_count)
     # 跳转到主html
     return render(request, 'admin_home.html', {'now_user': now_user,  # 当前登陆用户
                                                'username_head': username_head,  # 用户名头部
                                                'username_tail': username_tail,  # 用户名尾部
-                                               'page': now_page
+                                               'page': now_page,
+                                               'all_user_count':all_user_count
                                                })
 
 
@@ -275,3 +274,30 @@ def myAdmin_adduser_check_view(request):
 
     else:
         return redirect('/myAdmin/adduser/')
+
+
+# 用户管理详情页面
+def myAdmin_user_detail_view(request):
+    # 检测用户是否登陆
+    now_user, username_head, username_tail = Tools.check_user_login(request)
+
+    # 获取用户id
+    user_id = request.GET.get('user_id', '-1')
+    # 未获取到 参数
+    if user_id == '-1' or not user_id.isdecimal():
+        return redirect('/myAdmin/home/')
+
+    # 目标用户 通过id过滤
+    goal_user = NormalUser.objects.filter(id=user_id)
+    # 检测是否可以查找到用户
+    if not goal_user:
+        return redirect('/myAdmin/home/')
+    # 查询成功
+    goal_user = goal_user[0]
+
+    # 跳转到主html
+    return render(request, 'admin_user_detail.html', {'now_user': now_user,  # 当前登陆用户
+                                                      'username_head': username_head,  # 用户名头部
+                                                      'username_tail': username_tail,  # 用户名尾部
+                                                      'goal_user': goal_user,  # 目标用户
+                                                      })

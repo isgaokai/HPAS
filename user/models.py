@@ -18,6 +18,8 @@ class Administrator(models.Model):
     head_portrait = models.ImageField(upload_to='admin_portraits', null=True, blank=True)
     # 注册ip
     registered_ip_address = models.GenericIPAddressField(protocol='IPv4',verbose_name='注册IP')
+    # 注册时间
+    registration_date = models.DateTimeField(auto_now_add=True,verbose_name='注册时间', null=True, blank=True)
     # 最后登陆ip
     last_ip = models.GenericIPAddressField(protocol='IPv4', verbose_name="最后登陆IP", null=True, blank=True)
     # 登陆时间
@@ -48,6 +50,8 @@ class NormalUser(models.Model):
     head_portrait = models.ImageField(upload_to='user_portraits', null=True, blank=True )
     # 注册ip
     registered_ip_address = models.GenericIPAddressField(protocol='IPv4',verbose_name='注册IP')
+    # 注册时间
+    registration_date = models.DateTimeField(auto_now_add=True,verbose_name='注册时间', null=True, blank=True)
     # 最后登陆ip
     last_ip = models.GenericIPAddressField(protocol='IPv4', verbose_name="最后登陆IP", null=True, blank=True )
     # 登陆时间

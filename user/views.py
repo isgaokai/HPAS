@@ -39,7 +39,7 @@ def user_login_view(request):
     # 手机号登陆
     if mPattern.search(cookie_username) and cookie_password:
         # 验证数据库内是否存在该用户
-        if NormalUser.objects.filter(phone=cookie_username,password=cookie_password).count() != 0:
+        if NormalUser.objects.filter(phone=cookie_username,password=cookie_password,is_deleted=False).count() != 0:
             # session添加登陆状态为'yes'
             request.session['logged_in'] = 'yes'
             # session添加用户名
@@ -56,7 +56,7 @@ def user_login_view(request):
     # 邮箱登陆
     elif ePattern.search(cookie_username) and cookie_password:
         # 验证数据库内是否存在该用户
-        if NormalUser.objects.filter(email=cookie_username, password=cookie_password).count() != 0:
+        if NormalUser.objects.filter(email=cookie_username, password=cookie_password,is_deleted=False).count() != 0:
             # session添加登陆状态为'yes'
             request.session['logged_in'] = 'yes'
             # session添加用户名
@@ -108,7 +108,7 @@ def user_login_check_view(request):
     # 通过手机号登陆
     if mPattern.search(username):
         # 查询当前库内是否存在该用户
-        if NormalUser.objects.filter(phone=username).count() != 0:
+        if NormalUser.objects.filter(phone=username,is_deleted=False).count() != 0:
             # 定位用户
             user = NormalUser.objects.filter(phone=username)[0]
             # 对用户输入的密码与库内盐进行比对 检验密码是否正确
@@ -153,7 +153,7 @@ def user_login_check_view(request):
     # 通过email登陆
     else:
         # 查询当前库内是否存在该用户
-        if NormalUser.objects.filter(email=username).count() != 0:
+        if NormalUser.objects.filter(email=username,is_deleted=False).count() != 0:
             # 定位用户
             user = NormalUser.objects.filter(email=username)[0]
             # 对用户输入的密码与库内盐进行比对 检验密码是否正确

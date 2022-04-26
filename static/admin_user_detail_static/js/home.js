@@ -4,7 +4,6 @@
         //播放公告
         playAnnouncement(3000);
     });
-
     function playAnnouncement(interval) {
         var index = 0;
         var $announcement = $('.home-tips-container>span');
@@ -17,7 +16,6 @@
             $announcement.eq(index).stop(true, true).fadeIn().siblings('span').fadeOut();  //下标对应的图片显示，同辈元素隐藏
         }, interval);
     }
-
     //画canvas
     DrawCanvas();
 });
@@ -50,7 +48,7 @@ function DrawCanvas() {
         dotCount = 200;
         dotRadius = 150;
         dotDistance = 80;
-    }
+    } 
     //默认鼠标位置 canvas 中间
     var mousePosition = {
         x: 50 * canvas.width / 100,
@@ -129,7 +127,8 @@ function DrawCanvas() {
             if (dot.y < 0 || dot.y > canvas.height) {
                 dot.vx = dot.vx;
                 dot.vy = -dot.vy;
-            } else if (dot.x < 0 || dot.x > canvas.width) {
+            }
+            else if (dot.x < 0 || dot.x > canvas.width) {
                 dot.vx = -dot.vx;
                 dot.vy = dot.vy;
             }
@@ -174,7 +173,6 @@ function DrawCanvas() {
 
         requestAnimationFrame(animateDots);
     }
-
     //鼠标在canvas上移动
     $('canvas').on('mousemove', function (e) {
         mousePosition.x = e.pageX;
@@ -202,79 +200,6 @@ function resizeCanvas() {
     canvas.height = window.innerHeight * 1 / 3;
 }
 
-// 文档高度
-function getDocumentTop() {
-    undefined
-
-    var scrollTop = 0, bodyScrollTop = 0, documentScrollTop = 0;
-
-    if (document.body) {
-        undefined
-
-        bodyScrollTop = document.body.scrollTop;
-
-    }
-
-    if (document.documentElement) {
-        undefined
-
-        documentScrollTop = document.documentElement.scrollTop;
-
-    }
-
-    scrollTop = (bodyScrollTop - documentScrollTop > 0) ? bodyScrollTop : documentScrollTop;
-
-    return scrollTop;
-
-}
-
-// 可视窗口高度
-function getWindowHeight() {
-    undefined
-
-    var windowHeight = 0;
-
-    if (document.compatMode == "CSS1Compat") {
-        undefined
-
-        windowHeight = document.documentElement.clientHeight;
-
-    } else {
-        undefined
-
-        windowHeight = document.body.clientHeight;
-
-    }
-
-    return windowHeight;
-
-}
-
-// 滚动条滚动高度
-function getScrollHeight() {
-    undefined
-
-    var scrollHeight = 0, bodyScrollHeight = 0, documentScrollHeight = 0;
-
-    if (document.body) {
-        undefined
-
-        bodyScrollHeight = document.body.scrollHeight;
-
-    }
-
-    if (document.documentElement) {
-        undefined
-
-        documentScrollHeight = document.documentElement.scrollHeight;
-
-    }
-
-    scrollHeight = (bodyScrollHeight - documentScrollHeight > 0) ? bodyScrollHeight : documentScrollHeight;
-
-    return scrollHeight;
-
-}
 
 // // 设置当前时间
 // window.onload = function () {

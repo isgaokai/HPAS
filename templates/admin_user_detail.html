@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; Charset=gb2312">
     <meta http-equiv="Content-Language" content="zh-CN">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-    <title>用户管理</title>
+    <title>用户详情</title>
     <!--Layui-->
     <link href="{% static 'plug/layui/css/layui.css' %}" rel="stylesheet"/>
     <!--font-awesome-->
@@ -41,7 +41,7 @@
         {% endif %}
 
         <!-- 页面系统主题 -->
-        <a class="blog-logo" href="{% url 'myadmin:admin_home' %}">用户管理</a>
+        <a class="blog-logo" href="{% url 'myadmin:admin_home' %}">用户详情</a>
         <!-- 当前时间显示-->
         {#<div>#}
         {#    <div id="Main" style=" text-align:center;font-size:20px;color:white;line-height: 64px;"></div>#}
@@ -87,14 +87,25 @@
                     {% csrf_token %}
                     <input value="504" name="roleId" type="hidden">
                     <div class="am-form-group" style="width: 380px;margin: 0 auto">
+                        <label for="user-head_portrait" class="am-u-sm-3 am-form-label">
+                            ID
+                        </label>
+                        <div class="am-u-sm-9">
+                            <input id="txt_code" required="" placeholder="{{ goal_user.id }}" value=""
+                                   name="txt_code"
+                                   type="text" style="pointer-events:none;text-align: center">
+
+                        </div>
+                    </div>
+                    <br>
+                    <div class="am-form-group" style="width: 380px;margin: 0 auto">
                         <label for="user-name" class="am-u-sm-3 am-form-label">
                             昵称
                         </label>
                         <div class="am-u-sm-9">
-                            <input id="txt_nickname" required="" placeholder="请输入昵称" value="" name="txt_nickname"
-                                   type="text" onblur="ajax_nickname()">
-                            <span id="nickname_ok" class="icon_yes" style="display: none;"></span>
-
+                            <input id="txt_nickname" required="" placeholder="{{ goal_user.nickname }}" type="text"
+                                   value="" name="txt_nickname"
+                                   style="pointer-events:none;text-align: center">
                         </div>
                     </div>
                     <br>
@@ -103,10 +114,9 @@
                             手机号
                         </label>
                         <div class="am-u-sm-9">
-                            <input id="txt_phone" required="" placeholder="请输入手机号" value="" name="txt_phone"
-                                   type="text" onblur="ajax_phone()">
-                            <span id="phone_ok" class="icon_yes" style="display: none;"></span>
-
+                            <input id="txt_phone" required="" placeholder="{{ goal_user.phone }}" value=""
+                                   name="txt_phone"
+                                   type="text" style="pointer-events:none;text-align: center">
                         </div>
                     </div>
                     <br>
@@ -115,9 +125,9 @@
                             邮箱
                         </label>
                         <div class="am-u-sm-9">
-                            <input id="txt_email" required="" placeholder="请输入邮箱" value="" name="txt_email" type="text"
-                            onblur="ajax_email()">
-                            <span id="email_ok" class="icon_yes" style="display: none;"></span>
+                            <input id="txt_email" required="" placeholder="{{ goal_user.email }}" value=""
+                                   name="txt_email" type="text"
+                                   style="pointer-events:none;text-align: center">
 
                         </div>
                     </div>
@@ -128,22 +138,9 @@
                             密码
                         </label>
                         <div class="am-u-sm-9">
-                            <input id="txt_password" required="" placeholder="请输入密码" value="" name="txt_password"
-                                   type="text" onblur="ajax_password()">
-                            <span id="password_ok" class="icon_yes" style="display: none;"></span>
-
-                        </div>
-                    </div>
-                    <br>
-                    <div class="am-form-group" style="width: 380px;margin: 0 auto">
-                        <label for="user-phone" class="am-u-sm-3 am-form-label">
-                            确认密码
-                        </label>
-                        <div class="am-u-sm-9">
-                            <input id="txt_re_password" required="" placeholder="请再次确认密码" value=""
-                                   name="txt_re_password"
-                                   type="text" onblur="ajax_re_password()">
-                            <span id="re_password_ok" class="icon_yes" style="display: none;"></span>
+                            <input id="txt_password" required="" placeholder="{{ goal_user.password }}" value=""
+                                   name="txt_password"
+                                   type="text" style="pointer-events:none;text-align: center">
 
                         </div>
                     </div>
@@ -151,25 +148,84 @@
 
                     <div class="am-form-group" style="width: 380px;margin: 0 auto">
                         <label for="user-head_portrait" class="am-u-sm-3 am-form-label">
-                            激活码
+                            注册IP
                         </label>
                         <div class="am-u-sm-9">
-                            <input id="txt_code" required="" placeholder="请输入激活码" value="" name="txt_code"
-                                   type="text" onblur="ajax_code()">
-                            <span id="code_ok" class="icon_yes" style="display: none;"></span>
+                            <input id="txt_code" required="" placeholder="{{ goal_user.registered_ip_address }}"
+                                   value=""
+                                   name="txt_code"
+                                   type="text" style="pointer-events:none;text-align: center">
 
                         </div>
                     </div>
                     <br>
+                    <div class="am-form-group" style="width: 380px;margin: 0 auto">
+                        <label for="user-head_portrait" class="am-u-sm-3 am-form-label">
+                            注册时间
+                        </label>
+                        <div class="am-u-sm-9">
+                            <input id="txt_code" required="" placeholder="{{ goal_user.registration_date }}"
+                                   value=""
+                                   name="txt_code"
+                                   type="text" style="pointer-events:none;text-align: center">
 
+                        </div>
+                    </div>
+                    <br>
+                    <div class="am-form-group" style="width: 380px;margin: 0 auto">
+                        <label for="user-head_portrait" class="am-u-sm-3 am-form-label">
+                            登陆IP
+                        </label>
+                        <div class="am-u-sm-9">
+                            <input id="txt_code" required="" placeholder="{{ goal_user.last_ip }}" value=""
+                                   name="txt_code"
+                                   type="text" style="pointer-events:none;text-align: center">
+
+                        </div>
+                    </div>
+                    <br>
+                    <div class="am-form-group" style="width: 380px;margin: 0 auto">
+                        <label for="user-head_portrait" class="am-u-sm-3 am-form-label">
+                            登陆时间
+                        </label>
+                        <div class="am-u-sm-9">
+                            <input id="txt_code" required="" placeholder="{{ goal_user.last_login }}" value=""
+                                   name="txt_code"
+                                   type="text" style="pointer-events:none;text-align: center">
+
+                        </div>
+                    </div>
+                    <br>
+                    <div class="am-form-group" style="width: 380px;margin: 0 auto">
+                        <label for="user-head_portrait" class="am-u-sm-3 am-form-label">
+                            激活码
+                        </label>
+                        <div class="am-u-sm-9">
+                            <input id="txt_code" required="" placeholder="{{ goal_user.used_code }}" value=""
+                                   name="txt_code"
+                                   type="text" style="pointer-events:none;text-align: center">
+
+                        </div>
+                    </div>
+                    <br>
+                    <div class="am-form-group" style="width: 380px;margin: 0 auto">
+                        <label for="user-head_portrait" class="am-u-sm-3 am-form-label">
+                            被删除
+                        </label>
+                        <div class="am-u-sm-9">
+                            <input id="txt_code" required="" placeholder="{{ goal_user.is_deleted }}" value=""
+                                   name="txt_code"
+                                   type="text" style="pointer-events:none;text-align: center">
+
+                        </div>
+                    </div>
+                    <br>
                     <div class="am-form-group" style="width: 380px;margin: 0 auto">
                         <div class="am-u-sm-9 am-u-sm-push-3">
-                            <input id="addRole" class="am-btn am-btn-success" value="添加用户" type="button"
-                                   onclick="button_submit()">
 
                             <a href="{% url 'myadmin:admin_home' %}"> <input id="to_main" class="am-btn am-btn-success"
                                                                              value="返回主页" type="button"
-                                                                             onclick=""></a>
+                                                                             onclick="" style="width:255px"></a>
 
                         </div>
                     </div>

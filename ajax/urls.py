@@ -19,4 +19,10 @@ urlpatterns = [
     path('check_admin_username/',views.ajax_check_admin_username_view, name='check_admin_username'),
     # ajax检查用户昵称是否存在
     path('check_nickname/',views.ajax_check_nickname_view, name='check_nickname'),
+    # ajax加载数据
+    path('load_data/', views.ajax_load_data_view, name='load_data'),
+    # ajax搜索用户
+    path('search_user/',views.ajax_search_user_view,name='search_user'),
+    # ajax删除用户
+    path('delete_user/', views.ajax_delete_user_view, name='delete_user'),
 ]

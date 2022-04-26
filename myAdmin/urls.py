@@ -12,7 +12,7 @@ app_name = 'myadmin'
 
 urlpatterns = [
     # 用户管理主页面
-    path('home/',views.myAdmin_main_view,name='admin_main'),
+    path('home/',views.myAdmin_main_view,name='admin_home'),
     # 管理员登陆页面
     path('login/', views.myAdmin_login_view, name='admin_login'),
     # 管理员登陆检测
@@ -23,4 +23,6 @@ urlpatterns = [
     path('adduser/',views.myAdmin_adduser_view, name='admin_adduser'),
     # 新增用户验证视图
     path('adduser/check/',views.myAdmin_adduser_check_view, name='admin_adduser_check'),
+    # 用户管理详情页面
+    path('user_detail/',views.myAdmin_user_detail_view, name='admin_user_detail')
 ]

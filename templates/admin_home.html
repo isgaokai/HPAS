@@ -39,7 +39,8 @@
         {% endif %}
 
         <!-- 页面系统主题 -->
-        <a class="blog-logo" href="/home/admin/">用户管理</a>
+        <a class="blog-logo" href="{% url 'myadmin:admin_home' %}">用户管理</a>
+        <h1 id="page_count" style="display: none;">1</h1>
         <!-- 当前时间显示-->
         {#<div>#}
         {#    <div id="Main" style=" text-align:center;font-size:20px;color:white;line-height: 64px;"></div>#}
@@ -77,9 +78,9 @@
                 </div>
             </div>
 
-            <div class="container">
-                <div class="am-g">
-                    <div class="am-u-sm-12 am-u-md-6">
+            <div class="container" id="container">
+                <div class="am-g" id="am-g">
+                    <div class="am-u-sm-12 am-u-md-6"  style="width: 45%">
                         <div class="am-btn-toolbar">
                             <div class="am-btn-group am-btn-group-xs">
                                 <a href="{% url 'myadmin:admin_adduser' %}">
@@ -91,13 +92,19 @@
                             </div>
                         </div>
                     </div>
+                    <div class="am-u-sm-12 am-u-md-6"  style="width: 25%">
+                            <div class="am-btn-group am-btn-group-xs"  >
+                                <h2>总用户:{{ all_user_count }}</h2>
+                            </div>
+
+                    </div>
 
                     <div class="am-u-sm-12 am-u-md-3">
                         <div class="am-input-group am-input-group-sm" style="width: 65% ;right: -105px">
-                            <input class="am-form-field" placeholder="请输入姓名" id="username" type="text">
+                            <input class="am-form-field" placeholder="请输入昵称" id="input_search_user" type="text">
                             <span class="am-input-group-btn">
-										<button class="am-btn am-btn-default" type="button" id="btnsearch"
-                                                onclick="research_employee()">
+										<button class="am-btn am-btn-default" type="button" id="btn_search_user"
+                                                onclick="ajax_search_user()">
 											搜索
 										</button> </span>
                         </div>
@@ -107,7 +114,7 @@
                 <div class="am-g" style="margin-top: -30px;">
                     <div class="am-u-sm-12">
                         <form class="am-form" action="user/delAll.action">
-                            <table class="am-table am-table-striped am-table-hover table-main">
+                            <table class="am-table am-table-striped am-table-hover table-main" id="user_table">
                                 <thead>
                                 <tr>
                                     <th class="table-id" style="text-align: center">
@@ -145,7 +152,7 @@
                                 {% for user in page.object_list %}
                                     <tr>
 
-                                        <td style="text-align: center">{{ user.id }}</td>
+                                        <td style="text-align: center"><a href="{% url 'myadmin:admin_user_detail' %}?user_id={{ user.id }}">{{ user.id }}</a></td>
                                         <td style="text-align: center">{{ user.nickname }}</td>
                                         <td style="text-align: center">{{ user.phone }}</td>
                                         <td style="text-align: center">{{ user.email }}</td>
@@ -157,17 +164,24 @@
                                         <td>
                                             <div class="am-btn-toolbar">
                                                 <div class="am-btn-group am-btn-group-xs">
-                                                    <button type="button"
-                                                            class="am-btn am-btn-default am-btn-xs am-text-secondary btnEdit"
-                                                            onclick="change_employee()">
-                                                        <span class="am-icon-pencil-square-o"></span> 编辑
-                                                    </button>
-                                                    <button type="button"
-                                                            class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"
-                                                            onclick="delete_employee()"><span
-                                                            class="am-icon-trash-o"></span>
-                                                        删除
-                                                    </button>
+                                                    {% if user.is_deleted %}
+                                                        <button type="button"
+                                                                class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"
+                                                                onclick="delete_employee()" style="pointer-events:none">
+                                                        <span
+                                                                class="am-icon-trash-o"></span>
+                                                            删除
+                                                        </button>
+                                                    {% else %}
+                                                        <button type="button"
+                                                                class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"
+                                                                onclick="delete_employee()">
+                                                        <span
+                                                                class="am-icon-trash-o"></span>
+                                                            删除
+                                                        </button>
+                                                    {% endif %}
+
                                                 </div>
                                             </div>
                                         </td>
@@ -182,27 +196,27 @@
                 </div>
 
             </div>
-            <div style="width: 100%;text-align: center">
-                <!--实现上一页和下一页 及 页号-->
-                {% if page.has_previous %}
-                    <a href="{% url 'home:home_main' %}?page_index={{ page.previous_page_number }}">上一页</a>
-                {% endif %}
-
-
-                {% for n in page.paginator.page_range %}
-                    {% if page.number == n %}
-                        <a style="color: red ;border: 0;width: 20px;height: 20px;cursor: pointer; display: inline-block;text-align: center;line-height: 20px;"
-                           href="{% url 'home:home_main' %}?page_index={{ n }}">{{ n }}</a>
-                    {% else %}
-                        <a style="border: 0;width: 20px;height: 20px;cursor: pointer; display: inline-block;text-align: center;line-height: 20px;"
-                           href="{% url 'home:home_main' %}?page_index={{ n }}">{{ n }}</a>
-                    {% endif %}
-                {% endfor %}
-
-                {% if page.has_next %}
-                    <a href="{% url 'home:home_main' %}?page_index={{ page.next_page_number }}">下一页</a>
-                {% endif %}
-            </div>
+            {#<div style="width: 100%;text-align: center">#}
+            {#    <!--实现上一页和下一页 及 页号-->#}
+            {#    {% if page.has_previous %}#}
+            {#        <a href="{% url 'home:home_main' %}?page_index={{ page.previous_page_number }}">上一页</a>#}
+            {#    {% endif %}#}
+            {##}
+            {##}
+            {#    {% for n in page.paginator.page_range %}#}
+            {#        {% if page.number == n %}#}
+            {#            <a style="color: red ;border: 0;width: 20px;height: 20px;cursor: pointer; display: inline-block;text-align: center;line-height: 20px;"#}
+            {#               href="{% url 'home:home_main' %}?page_index={{ n }}">{{ n }}</a>#}
+            {#        {% else %}#}
+            {#            <a style="border: 0;width: 20px;height: 20px;cursor: pointer; display: inline-block;text-align: center;line-height: 20px;"#}
+            {#               href="{% url 'home:home_main' %}?page_index={{ n }}">{{ n }}</a>#}
+            {#        {% endif %}#}
+            {#    {% endfor %}#}
+            {##}
+            {#    {% if page.has_next %}#}
+            {#        <a href="{% url 'home:home_main' %}?page_index={{ page.next_page_number }}">下一页</a>#}
+            {#    {% endif %}#}
+            {#</div>#}
 
             <div class="clear"></div>
         </div>
@@ -222,5 +236,15 @@
 <script src="{% static 'admin_home_static/js/global.js' %}"></script>
 <!-- 本页脚本 -->
 <script src="{% static 'admin_home_static/js/home.js' %}"></script>
+<script>
+    $(window).bind("scroll", function () {
+
+        if (getScrollHeight() <= getDocumentTop() + getWindowHeight()) {
+            ajax_load_data()
+        }
+
+    });
+</script>
+<script src="{% static 'admin_home_static/js/ajax_home.js' %}"></script>
 </body>
 </html>

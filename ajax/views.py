@@ -1,5 +1,8 @@
+import json
 import re
 from decimal import Decimal
+
+from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import render
 
@@ -88,7 +91,6 @@ def ajax_check_code_view(request):
     if not input_code or len(input_code) != 12:
         return HttpResponse('false')
 
-    print(input_code)
     # 数据库中查找该激活码是否有效
     if Code.objects.filter(cdk=input_code, state=1).count() != 0:
         # 激活码可用
@@ -131,10 +133,11 @@ def ajax_check_admin_username_view(request):
             # 输入正确
             return HttpResponse('true')
 
+
 # ajax检查昵称是否存在
 def ajax_check_nickname_view(request):
     # 用户输入昵称
-    input_nickname= request.GET.get('input_nickname')
+    input_nickname = request.GET.get('input_nickname')
     # 检查是否存在
     if NormalUser.objects.filter(nickname=input_nickname).count() != 0:
         # 输入错误
@@ -142,3 +145,61 @@ def ajax_check_nickname_view(request):
     else:
         # 输入正确
         return HttpResponse('true')
+
+
+# ajax加载数据
+def ajax_load_data_view(request):
+    try:
+        # 获取已经加载页面
+        page_count = request.GET.get('page_count', '-1')
+        # 转换类型
+        page_count = int(page_count)
+    except:
+        return HttpResponse('false')
+    # 判断是否有效以及在范围内
+    if page_count == -1:
+        return HttpResponse('false')
+    # 目标页面+1
+    page_count += 1
+
+    # 最终返回结果
+    result = []
+
+    # 查找全部用户
+    users = NormalUser.objects.all().order_by('id')
+    # 声明分页器对象
+    user_category_paginator = Paginator(object_list=users, per_page=16)
+
+    try:
+        # 获取当前页面的用户
+        goal_page = user_category_paginator.page(page_count).object_list
+    except:
+        return HttpResponse('false')
+
+    # 添加至返回结果
+    for user in goal_page:
+        result.append({'user_id': user.id, 'user_nickname': str(user.nickname), 'user_phone': str(user.phone),
+                       'user_email': str(user.email), 'user_registered_ip_address': str(user.registered_ip_address),
+                       'user_last_login': str(user.last_login), 'user_used_code': str(user.used_code),
+                       'user_is_deleted': user.is_deleted})
+    # 转换为json格式
+    result = json.dumps(result)
+    return HttpResponse(result)
+
+# ajax搜索用户
+def ajax_search_user_view(request):
+    # 获取输入用户名字
+    input_search_user = request.GET.get('input_search_user')
+    # 查询是否存在该用户
+    goal_user= NormalUser.objects.filter(nickname=input_search_user)
+    # 查找失败
+    if not goal_user:
+        return HttpResponse('false')
+    # 查找成功
+    goal_user = goal_user[0]
+    result = goal_user.id
+    return HttpResponse(result)
+
+# ajax删除用户
+def ajax_delete_user_view(request):
+    pass
