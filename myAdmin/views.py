@@ -22,9 +22,9 @@ def myAdmin_main_view(request):
     user_type = request.session.get('user_type', 'null')
 
     # 管理员用户无法在主页面保存登陆状态
-    # if user_type == 'normalUser' or user_type == 'null':
-    # return redirect('/home/')
-    # else:
+    if user_type == 'normalUser' or user_type == 'null':
+        return redirect('/home/')
+
     # 检测用户是否登陆
     now_user, username_head, username_tail = Tools.check_user_login(request)
 
@@ -36,7 +36,7 @@ def myAdmin_main_view(request):
     now_page = paginator.page(1)
     # 全部用户数量
     all_user_count = NormalUser.objects.filter(is_deleted=False).count()
-    print(all_user_count)
+
     # 跳转到主html
     return render(request, 'admin_home.html', {'now_user': now_user,  # 当前登陆用户
                                                'username_head': username_head,  # 用户名头部
@@ -85,9 +85,9 @@ def myAdmin_login_check_view(request):
     # 通过手机号登陆
     if mPattern.search(username):
         # 查询当前库内是否存在该用户
-        if Administrator.objects.filter(phone=username).count() != 0:
+        if Administrator.objects.filter(phone=username,is_deleted=False).count() != 0:
             # 定位用户
-            user = Administrator.objects.filter(phone=username)[0]
+            user = Administrator.objects.filter(phone=username,is_deleted=False)[0]
             # 对用户输入的密码与库内盐进行比对 检验密码是否正确
             password_salt, password = Tools.password_encryption(password, pwd_salt=user.password_salt)
             # 密码正确
@@ -103,7 +103,6 @@ def myAdmin_login_check_view(request):
                     ip = request.META.get("REMOTE_ADDR")
                 # 对用户最后登陆ip进行修改
                 user.last_ip = ip
-                print('最后登陆ip{}'.format(ip))
                 # 修改后需要保存
                 user.save()
                 # session添加登陆状态为'yes'
@@ -112,6 +111,8 @@ def myAdmin_login_check_view(request):
                 request.session['username'] = username
                 # session添加用户类型
                 request.session['user_type'] = 'admin'
+                # session添加用户ID
+                request.session['now_user_id'] = user.id
                 # 添加日志
                 log_content = username + '管理员登陆了用户管理页面'
                 Log.objects.create(log_content=log_content)
@@ -124,9 +125,9 @@ def myAdmin_login_check_view(request):
     # 通过email登陆
     else:
         # 查询当前库内是否存在该用户
-        if Administrator.objects.filter(email=username).count() != 0:
+        if Administrator.objects.filter(email=username,is_deleted=False).count() != 0:
             # 定位用户
-            user = Administrator.objects.filter(email=username)[0]
+            user = Administrator.objects.filter(email=username,is_deleted=False)[0]
             # 对用户输入的密码与库内盐进行比对 检验密码是否正确
             password_salt, password = Tools.password_encryption(password, pwd_salt=user.password_salt)
             # 密码正确
@@ -134,7 +135,7 @@ def myAdmin_login_check_view(request):
                 # 返回响应
                 result = redirect('/myAdmin/home/')
                 # 对用户的最后登陆时间进行修改
-                user = Administrator.objects.filter(email=username)[0]
+
                 user.last_login = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
                 # 获取访问ip地址
                 if request.META.get('HTTP_X_FORWARDED_FOR'):
@@ -145,13 +146,14 @@ def myAdmin_login_check_view(request):
                 user.last_ip = ip
                 # 修改后需要保存
                 user.save()
-
                 # session添加登陆状态为'yes'
                 request.session['logged_in'] = 'yes'
                 # session添加用户名
                 request.session['username'] = username
                 # session添加用户类型
                 request.session['user_type'] = 'admin'
+                # session添加用户ID
+                request.session['now_user_id'] = user.id
                 # 添加日志
                 log_content = username + '管理员登陆了用户管理页面'
                 Log.objects.create(log_content=log_content)
@@ -186,9 +188,8 @@ def myAdmin_adduser_view(request):
     user_type = request.session.get('user_type', 'null')
 
     # 管理员用户无法在主页面保存登陆状态
-    # if user_type == 'normalUser' or user_type == 'null':
-    # return redirect('/home/')
-    # else:
+    if user_type == 'normalUser' or user_type == 'null':
+        return redirect('/home/')
     # 检测用户是否登陆
     now_user, username_head, username_tail = Tools.check_user_login(request)
     if now_user:
@@ -278,6 +279,13 @@ def myAdmin_adduser_check_view(request):
 
 # 用户管理详情页面
 def myAdmin_user_detail_view(request):
+    # 获取当前登陆用户类型
+    user_type = request.session.get('user_type', 'null')
+
+    # 管理员用户无法在主页面保存登陆状态
+    if user_type == 'normalUser' or user_type == 'null':
+        return redirect('/home/')
+
     # 检测用户是否登陆
     now_user, username_head, username_tail = Tools.check_user_login(request)
 
@@ -311,6 +319,12 @@ def myAdmin_user_detail_view(request):
 def myAdmin_user_change_password_view(request):
     # 检测用户是否登陆
     now_user, username_head, username_tail = Tools.check_user_login(request)
+    # 获取当前登陆用户类型
+    user_type = request.session.get('user_type', 'null')
+
+    # 管理员用户无法在主页面保存登陆状态
+    if user_type == 'normalUser' or user_type == 'null':
+        return redirect('/home/')
 
     # 获取用户id
     user_id = request.GET.get('user_id', '-1')

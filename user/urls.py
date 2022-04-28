@@ -23,5 +23,7 @@ urlpatterns = [
     path('register/register_check/', views.user_register_check_view, name='user_register_check'),
     # 登出
     path('log_out/', views.log_out_view, name='user_log_out'),
+    # 个人详情页
+    path('detail/', views.user_detail_view, name='user_detail'),
 
 ]

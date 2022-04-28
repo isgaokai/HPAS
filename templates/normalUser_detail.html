@@ -11,9 +11,9 @@
     <!--font-awesome-->
     <link href="{% static 'plug/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet"/>
     <!--全局样式表-->
-    <link href="{% static 'admin_change_user_static/css/global.css' %}" rel="stylesheet"/>
+    <link href="{% static 'normalUser_detail_static/css/global.css' %}" rel="stylesheet"/>
     <!-- 本页样式表 -->
-    <link href="{% static 'admin_change_user_static/css/home.css' %}" rel="stylesheet"/>
+    <link href="{% static 'normalUser_detail_static/css/home.css' %}" rel="stylesheet"/>
 
     <script src="https://cdn.bootcss.com/jquery/3.0.0/jquery.min.js"></script>
     <script type="text/javascript" src="https://assets.pyecharts.org/assets/echarts.min.js"></script>
@@ -30,19 +30,18 @@
     <div class="blog-container">
 
         {% if now_user %}
-            <a href="" class="blog-user">
+            <a href="{% url 'user:user_detail' %}?user_id={{ now_user_id }}" class="blog-user">
                 <b style="color: white">HI,<span id="user_logged_in">{{ username_head }}****{{ username_tail }}</span>
                 </b>
                 <object><a href="{% url 'myadmin:admin_log_out' %}" style="color: white">[退出]</a></object>
             </a>
         {% else %}
-            <a href="{% url 'myadmin:admin_login' %}" class="blog-user">
+            <a href="{% url 'user:user_login' %}" class="blog-user">
                 <b style="color: white">立即登陆</b></a>
         {% endif %}
 
         <!-- 页面系统主题 -->
-        <a class="blog-logo" href="{% url 'myadmin:admin_home' %}">用户详情</a>
-        <!-- 当前时间显示-->
+        <a class="blog-logo" href="/home/">历史价格查询</a>        <!-- 当前时间显示-->
         {#<div>#}
         {#    <div id="Main" style=" text-align:center;font-size:20px;color:white;line-height: 64px;"></div>#}
         {#</div>#}
@@ -74,8 +73,8 @@
             <div class="home-tips shadow">
                 <i style="float:left;line-height:17px;" class="fa fa-volume-up"></i>
                 <div class="home-tips-container">
-                    <span style="color: #009688;font:14px Helvetica Neue,Helvetica,PingFang SC,\5FAE\8F6F\96C5\9ED1,Tahoma,Arial,sans-serif">欢迎您!</span>
-                    {#<span style="color: #009688;font:14px Helvetica Neue,Helvetica,PingFang SC,\5FAE\8F6F\96C5\9ED1,Tahoma,Arial,sans-serif">有时查询会比较慢，请耐心等待！</span>#}
+                    <span style="color: #009688;font:14px Helvetica Neue,Helvetica,PingFang SC,\5FAE\8F6F\96C5\9ED1,Tahoma,Arial,sans-serif">[查询商品历史价格走势] 京东、天猫、淘宝、拼多多、亚马逊、苏宁、当当、考拉、严选、国美等商品网址!</span>
+                    <span style="color: #009688;font:14px Helvetica Neue,Helvetica,PingFang SC,\5FAE\8F6F\96C5\9ED1,Tahoma,Arial,sans-serif">有时查询会比较慢，请耐心等待！</span>
                 </div>
             </div>
 
@@ -133,7 +132,18 @@
                     </div>
                     <br>
 
+                    <div class="am-form-group" style="width: 380px;margin: 0 auto">
+                        <label for="user-phone" class="am-u-sm-3 am-form-label">
+                            原密码
+                        </label>
+                        <div class="am-u-sm-9">
+                            <input id="txt_old_password" required="" placeholder="请输入原密码" value="" name="txt_old_password"
+                                   type="password" onblur="ajax_old_password()" style="text-align: center">
+                            <span id="old_password_ok" class="icon_yes" style="display: none;"></span>
 
+                        </div>
+                    </div>
+                    <br>
                     <div class="am-form-group" style="width: 380px;margin: 0 auto">
                         <label for="user-phone" class="am-u-sm-3 am-form-label">
                             密码
@@ -176,7 +186,7 @@
                             <input id="addRole" class="am-btn am-btn-success" value="提交修改" type="button"
                                    onclick="button_submit()" style="width:124px">
 
-                            <a href="{% url 'myadmin:admin_home' %}"> <input id="to_main" class="am-btn am-btn-success"
+                            <a href="{% url 'home:home_main' %}"> <input id="to_main" class="am-btn am-btn-success"
                                                                              value="返回主页" type="button"
                                                                              onclick="" style="width:124px"></a>
 
@@ -200,9 +210,9 @@
 <!-- layui.js -->
 <script src="{% static 'plug/layui/layui.js' %}"></script>
 <!-- 全局脚本 -->
-<script src="{% static 'admin_change_user_static/js/global.js' %}"></script>
+<script src="{% static 'normalUser_detail_static/js/global.js' %}"></script>
 <!-- 本页脚本 -->
-<script src="{% static 'admin_change_user_static/js/home.js' %}"></script>
-<script src="{% static 'admin_change_user_static/js/ajax_check.js' %}"></script>
+<script src="{% static 'normalUser_detail_static/js/home.js' %}"></script>
+<script src="{% static 'normalUser_detail_static/js/ajax_check.js' %}"></script>
 </body>
 </html>

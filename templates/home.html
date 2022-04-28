@@ -26,13 +26,13 @@
     <div class="blog-container">
 
         {% if now_user %}
-            <a href="" class="blog-user">
+            <a href="{% url 'user:user_detail' %}?user_id={{ now_user_id }}" class="blog-user">
                 <b style="color: white">HI,<span id="user_logged_in">{{ username_head }}****{{ username_tail }}</span>
                 </b>
                 <object><a href="{% url 'user:user_log_out' %}" style="color: white">[退出]</a></object>
             </a>
         {% else %}
-            <a href="/user/login/" class="blog-user">
+            <a href="{% url 'user:user_login' %}" class="blog-user">
                 <b style="color: white">立即登陆</b></a>
         {% endif %}
 

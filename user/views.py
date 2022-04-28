@@ -28,7 +28,7 @@ def user_login_view(request):
     cookie_username = request.COOKIES.get('username')
     # 获取cookie中的password
     cookie_password = request.COOKIES.get('password')
-    print(cookie_username,cookie_password)
+    print(cookie_username, cookie_password)
     # cookie 中未存在
     if not cookie_username or not cookie_password:
         return render(request, 'normalUser_login.html')
@@ -39,13 +39,17 @@ def user_login_view(request):
     # 手机号登陆
     if mPattern.search(cookie_username) and cookie_password:
         # 验证数据库内是否存在该用户
-        if NormalUser.objects.filter(phone=cookie_username,password=cookie_password,is_deleted=False).count() != 0:
+        if NormalUser.objects.filter(phone=cookie_username, password=cookie_password, is_deleted=False).count() != 0:
+            # 当前用户
+            user = NormalUser.objects.filter(phone=cookie_username, password=cookie_password, is_deleted=False)[0]
             # session添加登陆状态为'yes'
             request.session['logged_in'] = 'yes'
             # session添加用户名
             request.session['username'] = cookie_username
             # session添加用户类型
             request.session['user_type'] = 'normalUser'
+            # session添加用户ID
+            request.session['now_user_id'] = user.id
             # 添加日志
             log_content = cookie_username + '访问了网站'
             Log.objects.create(log_content=log_content)
@@ -56,13 +60,17 @@ def user_login_view(request):
     # 邮箱登陆
     elif ePattern.search(cookie_username) and cookie_password:
         # 验证数据库内是否存在该用户
-        if NormalUser.objects.filter(email=cookie_username, password=cookie_password,is_deleted=False).count() != 0:
+        if NormalUser.objects.filter(email=cookie_username, password=cookie_password, is_deleted=False).count() != 0:
+            # 当前用户
+            user = NormalUser.objects.filter(email=cookie_username, password=cookie_password, is_deleted=False)[0]
             # session添加登陆状态为'yes'
             request.session['logged_in'] = 'yes'
             # session添加用户名
             request.session['username'] = cookie_username
             # session添加用户类型
             request.session['user_type'] = 'normalUser'
+            # session添加用户ID
+            request.session['now_user_id'] = user.id
             # 添加日志
             log_content = cookie_username + '访问了网站'
             Log.objects.create(log_content=log_content)
@@ -97,7 +105,6 @@ def user_login_check_view(request):
         autologin = request.POST.get('autologin')
     except:
         return redirect('/home/')
-    print(username,password,captcha,true_captcha,autologin)
 
     # 正则及其他检验
     if not ePattern.search(username) and not mPattern.search(username):
@@ -108,7 +115,7 @@ def user_login_check_view(request):
     # 通过手机号登陆
     if mPattern.search(username):
         # 查询当前库内是否存在该用户
-        if NormalUser.objects.filter(phone=username,is_deleted=False).count() != 0:
+        if NormalUser.objects.filter(phone=username, is_deleted=False).count() != 0:
             # 定位用户
             user = NormalUser.objects.filter(phone=username)[0]
             # 对用户输入的密码与库内盐进行比对 检验密码是否正确
@@ -126,7 +133,6 @@ def user_login_check_view(request):
                     ip = request.META.get("REMOTE_ADDR")
                 # 对用户最后登陆ip进行修改
                 user.last_ip = ip
-                print('最后登陆ip{}'.format(ip))
                 # 修改后需要保存
                 user.save()
                 # 判断用户是否选择七天免登陆
@@ -141,6 +147,8 @@ def user_login_check_view(request):
                 request.session['username'] = username
                 # session添加用户类型
                 request.session['user_type'] = 'normalUser'
+                # session添加用户ID
+                request.session['now_user_id'] = user.id
                 # 添加日志
                 log_content = username + '访问了网站'
                 Log.objects.create(log_content=log_content)
@@ -153,13 +161,14 @@ def user_login_check_view(request):
     # 通过email登陆
     else:
         # 查询当前库内是否存在该用户
-        if NormalUser.objects.filter(email=username,is_deleted=False).count() != 0:
+        if NormalUser.objects.filter(email=username, is_deleted=False).count() != 0:
             # 定位用户
             user = NormalUser.objects.filter(email=username)[0]
             # 对用户输入的密码与库内盐进行比对 检验密码是否正确
             password_salt, password = Tools.password_encryption(password, pwd_salt=user.password_salt)
             # 密码正确
             if password == user.password:
+
                 # 返回响应
                 result = redirect('/home/')
                 # 对用户的最后登陆时间进行修改
@@ -186,6 +195,8 @@ def user_login_check_view(request):
                 request.session['username'] = username
                 # session添加用户类型
                 request.session['user_type'] = 'normalUser'
+                # session添加用户ID
+                request.session['now_user_id'] = user.id
                 # 添加日志
                 log_content = username + '访问了网站'
                 Log.objects.create(log_content=log_content)
@@ -227,16 +238,16 @@ def user_register_check_view(request):
         true_captcha = request.session.get('true_captcha').lower()
     except:
         return redirect('/home/')
-    print(username,password,re_password,true_captcha,code,captcha)
+    print(username, password, re_password, true_captcha, code, captcha)
     # 正则及其他检验
     if not ePattern.search(username) and not mPattern.search(username):
         return HttpResponse('/user/register/')
     elif not pPattern.search(password) or password != re_password or Tools.checkout_password(
-            password) == 'LowSecurity' or captcha != true_captcha or len(code)!= 12:
+            password) == 'LowSecurity' or captcha != true_captcha or len(code) != 12:
         return HttpResponse('/user/register/')
 
     # 数据库中查找该激活码是否有效
-    if Code.objects.filter(cdk=code,state=1).count() == 0:
+    if Code.objects.filter(cdk=code, state=1).count() == 0:
         # 激活码不可用
         return HttpResponse('/user/register/')
 
@@ -256,11 +267,12 @@ def user_register_check_view(request):
                     # 对密码进行加盐
                     password_salt, password = Tools.password_encryption(password)
                     # 修改code 状态
-                    goal_code = Code.objects.filter(cdk=code,state=1)[0]
+                    goal_code = Code.objects.filter(cdk=code, state=1)[0]
                     goal_code.state = 0
                     goal_code.save()
                     # 创建对象
-                    NormalUser.objects.create(phone=username, password=password, password_salt=password_salt,registered_ip_address=ip,used_code=code)
+                    NormalUser.objects.create(phone=username, password=password, password_salt=password_salt,
+                                              registered_ip_address=ip, used_code=code)
                     # 添加日志
                     log_content = username + '进行了注册'
                     Log.objects.create(log_content=log_content)
@@ -338,3 +350,50 @@ def log_out_view(request):
     return result
 
 
+# 定义用户详情页
+def user_detail_view(request):
+    # 获取当前登陆用户类型
+    user_type = request.session.get('user_type', 'null')
+    # 获取当前登陆用户ID
+    now_user_id = request.session.get('now_user_id', '-1')
+
+    # 管理员用户无法在主页面保存登陆状态
+    if user_type == 'admin' or user_type == 'null':
+        return redirect('/home/')
+
+    # 检测用户是否登陆
+    now_user, username_head, username_tail = Tools.check_user_login(request)
+
+    try:
+        # 获取用户名
+        user_id = request.GET.get('user_id', '-1')
+        user_id = int(user_id)
+    except:
+        return redirect('/home/')
+
+    # 添加日志
+    if now_user:
+        log_content = str(now_user) + '访问了用户ID:' + str(user_id) + '详情页'
+        Log.objects.create(log_content=log_content)
+
+    # 未获取到 参数
+    if user_id == -1 or user_id != now_user_id:
+        return redirect('/home/')
+
+    # 目标用户 通过id过滤
+    goal_user = NormalUser.objects.filter(id=user_id, is_deleted=False)
+    # 检测是否可以查找到用户
+    if not goal_user:
+        return redirect('/home/')
+
+    # 查询成功
+    goal_user = goal_user[0]
+
+    # 跳转到主html
+    return render(request, 'normalUser_detail.html', {'now_user': now_user,  # 当前登陆用户
+                                                      'username_head': username_head,  # 用户名头部
+                                                      'username_tail': username_tail,  # 用户名尾部
+                                                      'goal_user': goal_user,  # 目标用户
+                                                      'now_user_id': now_user_id  # 当前登陆用户ID
+
+                                                      })

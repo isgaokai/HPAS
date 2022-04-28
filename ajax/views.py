@@ -187,6 +187,7 @@ def ajax_load_data_view(request):
     result = json.dumps(result)
     return HttpResponse(result)
 
+
 # ajax搜索用户
 def ajax_search_user_view(request):
     # 获取输入用户名字
@@ -194,13 +195,18 @@ def ajax_search_user_view(request):
 
     # 检测用户是否登陆
     now_user, username_head, username_tail = Tools.check_user_login(request)
-    if now_user:
-        # 添加日志
+    # 获取当前登陆用户类型
+    user_type = request.session.get('user_type', 'null')
+
+    # 添加日志
+    if now_user and user_type == 'admin':
         log_content = now_user + '管理员搜索了用户昵称:' + str(input_search_user)
         Log.objects.create(log_content=log_content)
+    else:
+        return HttpResponse('false')
 
     # 查询是否存在该用户
-    goal_user= NormalUser.objects.filter(nickname=input_search_user)
+    goal_user = NormalUser.objects.filter(nickname=input_search_user)
     # 查找失败
     if not goal_user:
         return HttpResponse('false')
@@ -208,8 +214,8 @@ def ajax_search_user_view(request):
     goal_user = goal_user[0]
     result = goal_user.id
 
-
     return HttpResponse(result)
+
 
 # ajax删除用户
 def ajax_delete_user_view(request):
@@ -218,13 +224,18 @@ def ajax_delete_user_view(request):
 
     # 检测用户是否登陆
     now_user, username_head, username_tail = Tools.check_user_login(request)
-    if now_user:
-        # 添加日志
+    # 获取当前登陆用户类型
+    user_type = request.session.get('user_type', 'null')
+
+    # 添加日志
+    if now_user and user_type == 'admin':
         log_content = now_user + '管理员删除了用户ID:' + str(delete_user_id)
         Log.objects.create(log_content=log_content)
+    else:
+        return HttpResponse('false')
 
     # 查询是否存在该用户
-    goal_user = NormalUser.objects.filter(id=delete_user_id,is_deleted=False)
+    goal_user = NormalUser.objects.filter(id=delete_user_id, is_deleted=False)
     # 查找失败
     if not goal_user:
         return HttpResponse('false')
@@ -235,30 +246,70 @@ def ajax_delete_user_view(request):
 
     return HttpResponse('true')
 
+
 # ajax修改用户密码
 def ajax_change_user_password_view(request):
     # 获取被修改用户的id
     change_user_id = request.GET.get('change_user_id')
     # 修改后的密码
     new_password = request.GET.get('new_password')
-    print(change_user_id,new_password)
 
     # 检测用户是否登陆
     now_user, username_head, username_tail = Tools.check_user_login(request)
-    if now_user:
-        # 添加日志
-        log_content = now_user + '管理员修改了用户ID:' + str(change_user_id) +'密码'
+    # 获取当前登陆用户类型
+    user_type = request.session.get('user_type', 'null')
+
+    # 添加日志
+    if now_user and user_type == 'admin':
+
+        log_content = now_user + '管理员修改了用户ID:' + str(change_user_id) + '密码'
         Log.objects.create(log_content=log_content)
 
     # 查询是否存在该用户
-    goal_user = NormalUser.objects.filter(id=change_user_id,is_deleted=False)
+    goal_user = NormalUser.objects.filter(id=change_user_id, is_deleted=False)
     # 查找失败
     if not goal_user:
         return HttpResponse('false')
     # 查找成功
     goal_user = goal_user[0]
-    password_salt, password = Tools.password_encryption(new_password,goal_user.password_salt)
+    password_salt, password = Tools.password_encryption(new_password, goal_user.password_salt)
     goal_user.password = password
     goal_user.save()
 
+    # 添加日志
+    if now_user and user_type == 'normalUser':
+        log_content = now_user + '修改了自身密码'
+        Log.objects.create(log_content=log_content)
+
     return HttpResponse('true')
+
+
+# ajax检查用户旧密码
+def ajax_check_old_password_view(request):
+    # 用户输入旧密码
+    input_old_password = request.GET.get('input_old_password')
+    # 用户密码等级
+    level = Tools.checkout_password(input_old_password)
+    # 输入密码未通过检验
+    if not level:
+        return HttpResponse('False')
+    # 低强度密码
+    if level == 'LowSecurity':
+        return HttpResponse('False')
+
+    # 获取当前登陆用户ID
+    now_user_id = request.session.get('now_user_id', '-1')
+    try:
+        # 查找当前用户
+        user = NormalUser.objects.filter(id=now_user_id, is_deleted=False)[0]
+    except:
+        return HttpResponse('False')
+
+    # 对用户输入的密码与库内盐进行比对 检验密码是否正确
+    password_salt, password = Tools.password_encryption(input_old_password, pwd_salt=user.password_salt)
+
+    # 判断加盐后的密码是否一致
+    if password != user.password:
+        return HttpResponse('False')
+
+    return HttpResponse('True')

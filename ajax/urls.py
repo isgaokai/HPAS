@@ -27,4 +27,6 @@ urlpatterns = [
     path('delete_user/', views.ajax_delete_user_view, name='delete_user'),
     # ajax修改用户密码
     path('change_user_password/',views.ajax_change_user_password_view, name='change_user_password'),
+    # ajax检验用户旧密码
+    path('check_old_password/', views.ajax_check_old_password_view, name='check_old_password'),
 ]
