@@ -8,6 +8,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from Tools.Tools import Tools
+from myLog.models import Log
 from user.models import NormalUser, Code, Administrator
 
 
@@ -179,7 +180,7 @@ def ajax_load_data_view(request):
     # 添加至返回结果
     for user in goal_page:
         result.append({'user_id': user.id, 'user_nickname': str(user.nickname), 'user_phone': str(user.phone),
-                       'user_email': str(user.email), 'user_registered_ip_address': str(user.registered_ip_address),
+                       'user_email': str(user.email),
                        'user_last_login': str(user.last_login), 'user_used_code': str(user.used_code),
                        'user_is_deleted': user.is_deleted})
     # 转换为json格式
@@ -190,6 +191,14 @@ def ajax_load_data_view(request):
 def ajax_search_user_view(request):
     # 获取输入用户名字
     input_search_user = request.GET.get('input_search_user')
+
+    # 检测用户是否登陆
+    now_user, username_head, username_tail = Tools.check_user_login(request)
+    if now_user:
+        # 添加日志
+        log_content = now_user + '管理员搜索了用户昵称:' + str(input_search_user)
+        Log.objects.create(log_content=log_content)
+
     # 查询是否存在该用户
     goal_user= NormalUser.objects.filter(nickname=input_search_user)
     # 查找失败
@@ -198,8 +207,58 @@ def ajax_search_user_view(request):
     # 查找成功
     goal_user = goal_user[0]
     result = goal_user.id
+
+
     return HttpResponse(result)
 
 # ajax删除用户
 def ajax_delete_user_view(request):
-    pass
+    # 获取被删除用户的id
+    delete_user_id = request.GET.get('delete_user_id')
+
+    # 检测用户是否登陆
+    now_user, username_head, username_tail = Tools.check_user_login(request)
+    if now_user:
+        # 添加日志
+        log_content = now_user + '管理员删除了用户ID:' + str(delete_user_id)
+        Log.objects.create(log_content=log_content)
+
+    # 查询是否存在该用户
+    goal_user = NormalUser.objects.filter(id=delete_user_id,is_deleted=False)
+    # 查找失败
+    if not goal_user:
+        return HttpResponse('false')
+    # 查找成功
+    goal_user = goal_user[0]
+    goal_user.is_deleted = True
+    goal_user.save()
+
+    return HttpResponse('true')
+
+# ajax修改用户密码
+def ajax_change_user_password_view(request):
+    # 获取被修改用户的id
+    change_user_id = request.GET.get('change_user_id')
+    # 修改后的密码
+    new_password = request.GET.get('new_password')
+    print(change_user_id,new_password)
+
+    # 检测用户是否登陆
+    now_user, username_head, username_tail = Tools.check_user_login(request)
+    if now_user:
+        # 添加日志
+        log_content = now_user + '管理员修改了用户ID:' + str(change_user_id) +'密码'
+        Log.objects.create(log_content=log_content)
+
+    # 查询是否存在该用户
+    goal_user = NormalUser.objects.filter(id=change_user_id,is_deleted=False)
+    # 查找失败
+    if not goal_user:
+        return HttpResponse('false')
+    # 查找成功
+    goal_user = goal_user[0]
+    password_salt, password = Tools.password_encryption(new_password,goal_user.password_salt)
+    goal_user.password = password
+    goal_user.save()
+
+    return HttpResponse('true')

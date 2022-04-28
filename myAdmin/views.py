@@ -42,7 +42,7 @@ def myAdmin_main_view(request):
                                                'username_head': username_head,  # 用户名头部
                                                'username_tail': username_tail,  # 用户名尾部
                                                'page': now_page,
-                                               'all_user_count':all_user_count
+                                               'all_user_count': all_user_count
                                                })
 
 
@@ -283,6 +283,11 @@ def myAdmin_user_detail_view(request):
 
     # 获取用户id
     user_id = request.GET.get('user_id', '-1')
+    if now_user:
+        # 添加日志
+        log_content = now_user + '管理员访问了用户ID:' + str(user_id) + '详情页'
+        Log.objects.create(log_content=log_content)
+
     # 未获取到 参数
     if user_id == '-1' or not user_id.isdecimal():
         return redirect('/myAdmin/home/')
@@ -297,6 +302,37 @@ def myAdmin_user_detail_view(request):
 
     # 跳转到主html
     return render(request, 'admin_user_detail.html', {'now_user': now_user,  # 当前登陆用户
+                                                      'username_head': username_head,  # 用户名头部
+                                                      'username_tail': username_tail,  # 用户名尾部
+                                                      'goal_user': goal_user,  # 目标用户
+                                                      })
+
+# 用户变更密码详情页面
+def myAdmin_user_change_password_view(request):
+    # 检测用户是否登陆
+    now_user, username_head, username_tail = Tools.check_user_login(request)
+
+    # 获取用户id
+    user_id = request.GET.get('user_id', '-1')
+    if now_user:
+        # 添加日志
+        log_content = now_user + '管理员访问了用户ID:' + str(user_id) + '变更密码详情页'
+        Log.objects.create(log_content=log_content)
+
+    # 未获取到 参数
+    if user_id == '-1' or not user_id.isdecimal():
+        return redirect('/myAdmin/home/')
+
+    # 目标用户 通过id过滤
+    goal_user = NormalUser.objects.filter(id=user_id)
+    # 检测是否可以查找到用户
+    if not goal_user:
+        return redirect('/myAdmin/home/')
+    # 查询成功
+    goal_user = goal_user[0]
+
+    # 跳转到主html
+    return render(request, 'admin_change_user.html', {'now_user': now_user,  # 当前登陆用户
                                                       'username_head': username_head,  # 用户名头部
                                                       'username_tail': username_tail,  # 用户名尾部
                                                       'goal_user': goal_user,  # 目标用户

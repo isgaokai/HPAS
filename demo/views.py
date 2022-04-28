@@ -117,11 +117,11 @@ class ChartView(APIView):
         # 未通过验证
         if not uPattern.search(history_key):
             return JsonResponse(json.loads('false'))
-
         # 添加日志
         if username != 'null':
             log_content = username + '用户查询了' + str(history_key) + '历史价格'
             Log.objects.create(log_content=log_content)
+        print(history_key)
         return JsonResponse(json.loads(bar_base(history_key)))
 
 

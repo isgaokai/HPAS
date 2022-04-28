@@ -24,5 +24,7 @@ urlpatterns = [
     # 新增用户验证视图
     path('adduser/check/',views.myAdmin_adduser_check_view, name='admin_adduser_check'),
     # 用户管理详情页面
-    path('user_detail/',views.myAdmin_user_detail_view, name='admin_user_detail')
+    path('user_detail/',views.myAdmin_user_detail_view, name='admin_user_detail'),
+    # 用户变更密码详情页面
+    path('user_change_password/', views.myAdmin_user_change_password_view, name='admin_user_change_password'),
 ]

@@ -11,9 +11,9 @@
     <!--font-awesome-->
     <link href="{% static 'plug/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet"/>
     <!--全局样式表-->
-    <link href="{% static 'admin_user_detail_static/css/global.css' %}" rel="stylesheet"/>
+    <link href="{% static 'admin_change_user_static/css/global.css' %}" rel="stylesheet"/>
     <!-- 本页样式表 -->
-    <link href="{% static 'admin_user_detail_static/css/home.css' %}" rel="stylesheet"/>
+    <link href="{% static 'admin_change_user_static/css/home.css' %}" rel="stylesheet"/>
 
     <script src="https://cdn.bootcss.com/jquery/3.0.0/jquery.min.js"></script>
     <script type="text/javascript" src="https://assets.pyecharts.org/assets/echarts.min.js"></script>
@@ -81,7 +81,7 @@
 
 
             <div class="am-g">
-                <form enctype="multipart/form-data" class="am-form am-form-horizontal" id="admin_register_form"
+                <form enctype="multipart/form-data" class="am-form am-form-horizontal" id="admin_change_form"
                       action="{% url 'myadmin:admin_adduser_check' %}" method="post"
                       style="padding-top: 30px;">
                     {% csrf_token %}
@@ -91,8 +91,8 @@
                             ID
                         </label>
                         <div class="am-u-sm-9">
-                            <input id="txt_code" required="" placeholder="{{ goal_user.id }}" value=""
-                                   name="txt_code"
+                            <input id="txt_id" required="" placeholder="{{ goal_user.id }}" value=""
+                                   name="txt_id"
                                    type="text" style="pointer-events:none;text-align: center">
 
                         </div>
@@ -133,77 +133,28 @@
                     </div>
                     <br>
 
+
                     <div class="am-form-group" style="width: 380px;margin: 0 auto">
                         <label for="user-phone" class="am-u-sm-3 am-form-label">
                             密码
                         </label>
                         <div class="am-u-sm-9">
-                            <input id="txt_password" required="" placeholder="{{ goal_user.password }}" value=""
-                                   name="txt_password"
-                                   type="text" style="pointer-events:none;text-align: center">
-
-                        </div>
-                    </div>
-                    <br>
-
-                    <div class="am-form-group" style="width: 380px;margin: 0 auto">
-                        <label for="user-head_portrait" class="am-u-sm-3 am-form-label">
-                            注册IP
-                        </label>
-                        <div class="am-u-sm-9">
-                            <input id="txt_code" required="" placeholder="{{ goal_user.registered_ip_address }}"
-                                   value=""
-                                   name="txt_code"
-                                   type="text" style="pointer-events:none;text-align: center">
+                            <input id="txt_password" required="" placeholder="请输入新密码" value="" name="txt_password"
+                                   type="password" onblur="ajax_password()" style="text-align: center">
+                            <span id="password_ok" class="icon_yes" style="display: none;"></span>
 
                         </div>
                     </div>
                     <br>
                     <div class="am-form-group" style="width: 380px;margin: 0 auto">
-                        <label for="user-head_portrait" class="am-u-sm-3 am-form-label">
-                            注册时间
+                        <label for="user-phone" class="am-u-sm-3 am-form-label">
+                            确认密码
                         </label>
                         <div class="am-u-sm-9">
-                            <input id="txt_code" required="" placeholder="{{ goal_user.registration_date }}"
-                                   value=""
-                                   name="txt_code"
-                                   type="text" style="pointer-events:none;text-align: center">
-
-                        </div>
-                    </div>
-                    <br>
-                    <div class="am-form-group" style="width: 380px;margin: 0 auto">
-                        <label for="user-head_portrait" class="am-u-sm-3 am-form-label">
-                            登陆IP
-                        </label>
-                        <div class="am-u-sm-9">
-                            <input id="txt_code" required="" placeholder="{{ goal_user.last_ip }}" value=""
-                                   name="txt_code"
-                                   type="text" style="pointer-events:none;text-align: center">
-
-                        </div>
-                    </div>
-                    <br>
-                    <div class="am-form-group" style="width: 380px;margin: 0 auto">
-                        <label for="user-head_portrait" class="am-u-sm-3 am-form-label">
-                            登陆时间
-                        </label>
-                        <div class="am-u-sm-9">
-                            <input id="txt_code" required="" placeholder="{{ goal_user.last_login }}" value=""
-                                   name="txt_code"
-                                   type="text" style="pointer-events:none;text-align: center">
-
-                        </div>
-                    </div>
-                    <br>
-                    <div class="am-form-group" style="width: 380px;margin: 0 auto">
-                        <label for="user-head_portrait" class="am-u-sm-3 am-form-label">
-                            激活码
-                        </label>
-                        <div class="am-u-sm-9">
-                            <input id="txt_code" required="" placeholder="{{ goal_user.used_code }}" value=""
-                                   name="txt_code"
-                                   type="text" style="pointer-events:none;text-align: center">
+                            <input id="txt_re_password" required="" placeholder="请再次确认密码" value=""
+                                   name="txt_re_password"
+                                   type="password" onblur="ajax_re_password()" style="text-align: center">
+                            <span id="re_password_ok" class="icon_yes" style="display: none;"></span>
 
                         </div>
                     </div>
@@ -222,10 +173,12 @@
                     <br>
                     <div class="am-form-group" style="width: 380px;margin: 0 auto">
                         <div class="am-u-sm-9 am-u-sm-push-3">
+                            <input id="addRole" class="am-btn am-btn-success" value="提交修改" type="button"
+                                   onclick="button_submit()" style="width:124px">
 
                             <a href="{% url 'myadmin:admin_home' %}"> <input id="to_main" class="am-btn am-btn-success"
                                                                              value="返回主页" type="button"
-                                                                             onclick="" style="width:255px"></a>
+                                                                             onclick="" style="width:124px"></a>
 
                         </div>
                     </div>
@@ -247,9 +200,9 @@
 <!-- layui.js -->
 <script src="{% static 'plug/layui/layui.js' %}"></script>
 <!-- 全局脚本 -->
-<script src="{% static 'admin_user_detail_static/js/global.js' %}"></script>
+<script src="{% static 'admin_change_user_static/js/global.js' %}"></script>
 <!-- 本页脚本 -->
-<script src="{% static 'admin_user_detail_static/js/home.js' %}"></script>
-<script src="{% static 'admin_user_detail_static/js/ajax_check.js' %}"></script>
+<script src="{% static 'admin_change_user_static/js/home.js' %}"></script>
+<script src="{% static 'admin_change_user_static/js/ajax_check.js' %}"></script>
 </body>
 </html>

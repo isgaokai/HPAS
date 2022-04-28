@@ -116,7 +116,7 @@
                         </label>
                         <div class="am-u-sm-9">
                             <input id="txt_email" required="" placeholder="请输入邮箱" value="" name="txt_email" type="text"
-                            onblur="ajax_email()">
+                                   onblur="ajax_email()">
                             <span id="email_ok" class="icon_yes" style="display: none;"></span>
 
                         </div>
@@ -129,7 +129,7 @@
                         </label>
                         <div class="am-u-sm-9">
                             <input id="txt_password" required="" placeholder="请输入密码" value="" name="txt_password"
-                                   type="text" onblur="ajax_password()">
+                                   type="password" onblur="ajax_password()">
                             <span id="password_ok" class="icon_yes" style="display: none;"></span>
 
                         </div>
@@ -142,7 +142,7 @@
                         <div class="am-u-sm-9">
                             <input id="txt_re_password" required="" placeholder="请再次确认密码" value=""
                                    name="txt_re_password"
-                                   type="text" onblur="ajax_re_password()">
+                                   type="password" onblur="ajax_re_password()">
                             <span id="re_password_ok" class="icon_yes" style="display: none;"></span>
 
                         </div>
@@ -165,11 +165,11 @@
                     <div class="am-form-group" style="width: 380px;margin: 0 auto">
                         <div class="am-u-sm-9 am-u-sm-push-3">
                             <input id="addRole" class="am-btn am-btn-success" value="添加用户" type="button"
-                                   onclick="button_submit()">
+                                   onclick="button_submit()" style="width:124px">
 
                             <a href="{% url 'myadmin:admin_home' %}"> <input id="to_main" class="am-btn am-btn-success"
                                                                              value="返回主页" type="button"
-                                                                             onclick=""></a>
+                                                                             onclick="" style="width:124px"></a>
 
                         </div>
                     </div>
